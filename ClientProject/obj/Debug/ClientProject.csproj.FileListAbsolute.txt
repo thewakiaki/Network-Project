@@ -10,3 +10,4 @@ C:\Users\w025157k\source\repos\ServerProject\ClientProject\obj\Debug\ClientProje
 C:\Users\w025157k\source\repos\ServerProject\ClientProject\obj\Debug\ClientProject_MarkupCompile.lref
 C:\Users\w025157k\source\repos\ServerProject\ClientProject\obj\Debug\MainWindow.baml
 C:\Users\w025157k\source\repos\ServerProject\ClientProject\obj\Debug\ClientProject.g.resources
+C:\Users\w025157k\source\repos\ServerProject\ClientProject\obj\Debug\ClientProject_Content.g.cs
