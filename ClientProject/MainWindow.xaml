@@ -1,0 +1,63 @@
+﻿<Window x:Class="ClientProject.MainWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ClientProject"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" MinHeight="450" MaxHeight="450" MinWidth="800" MaxWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.1*"/>
+            <ColumnDefinition Width="0.12*"/>
+            <ColumnDefinition Width="0.18*"/>
+            <ColumnDefinition Width="0.3*"/>
+            <ColumnDefinition Width="0.3*"/>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="0.15*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="0.875*"/>
+            <RowDefinition Height="0.1275*"/>
+        </Grid.RowDefinitions>
+
+
+
+        <Rectangle Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="3" Fill="#4d4d4d"/>
+        <Rectangle Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" Fill="#2e2e2e"/>
+        <Rectangle Grid.Column="3" Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="3" Fill="#828282"/>
+        <Rectangle Grid.Column="6" Grid.Row="0" Fill="#828282"/>
+        <Rectangle Grid.Column="6" Grid.Row="1" Grid.RowSpan="3" Fill="#4d4d4d"/>
+
+
+        <Image Grid.Column="0" Grid.Row="3" Source="/Images/Default Profile.png" Margin="5, 5 , 5, 5" />
+
+        <TextBlock Grid.Column="1" Grid.Row="3" Text="Username: " VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="14"/>
+        <TextBlock Grid.Column="1" Grid.Row="3" Text="Nickname: " VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="14"/>
+
+        <TextBlock Grid.Column="6" Grid.Row="1" VerticalAlignment="Top" Text="Messages From"/>
+        <TextBox Grid.Column="6" Grid.Row="1" Grid.RowSpan="2" Margin="5, 30, 5, 5"/>
+
+        <TextBox Grid.Column="2" Grid.Row="3" VerticalAlignment="Top" Name="Username" TextChanged="Username_TextBox"/>
+        <TextBox Grid.Column="2" Grid.Row="3" VerticalAlignment="Bottom"/>
+
+        <TextBlock Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Text="  Server IP:" FontSize="16"/>
+        <TextBox Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Center" Text="192.168.0.1" FontSize="16"/>
+
+        <TextBlock Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Center" Text="    Port:" FontSize="16"/>
+        <TextBox Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Text="4444" FontSize="16"/>
+
+        <CheckBox Grid.Column="5" Grid.Row="0" VerticalAlignment="Center" Checked="Server_Check_Box" Name="Connection"/>
+        <TextBlock Grid.Column="5" Grid.Row="0" Text="Enable Server" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+        <CheckBox Grid.Column="5" VerticalAlignment="Center" Checked="Encryption_Check_Box" Grid.ColumnSpan="2" HorizontalAlignment="Right" Width="89"/>
+        <TextBlock Grid.Column="6" Grid.Row="0" Text="  Encryption" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+        <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Margin="10" Text="Friends" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+        <TextBox Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="3" Margin="10" TextChanged="Chat_Display" Name="ChatDisplay" />
+
+        <TextBox Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="2" Margin="10,13,10, 13" TextChanged="Input_Message_Box" MaxHeight="50" Name="EnterMessage" Text=""/>
+        <Button Grid.Column="5" Grid.Row="3" Margin = "10" Content="Send message" MaxHeight="50" Click="Send_Message_Button" Name="SendButton"/>
+    </Grid>
+</Window>

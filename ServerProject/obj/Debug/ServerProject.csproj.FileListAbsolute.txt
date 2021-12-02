@@ -1,0 +1,7 @@
+C:\Users\w025157k\source\repos\ServerProject\ServerProject\bin\Debug\ServerProject.exe.config
+C:\Users\w025157k\source\repos\ServerProject\ServerProject\bin\Debug\ServerProject.exe
+C:\Users\w025157k\source\repos\ServerProject\ServerProject\bin\Debug\ServerProject.pdb
+C:\Users\w025157k\source\repos\ServerProject\ServerProject\obj\Debug\ServerProject.csprojAssemblyReference.cache
+C:\Users\w025157k\source\repos\ServerProject\ServerProject\obj\Debug\ServerProject.csproj.CoreCompileInputs.cache
+C:\Users\w025157k\source\repos\ServerProject\ServerProject\obj\Debug\ServerProject.exe
+C:\Users\w025157k\source\repos\ServerProject\ServerProject\obj\Debug\ServerProject.pdb
