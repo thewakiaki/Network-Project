@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Net.Sockets;
 using System.IO;
@@ -12,8 +13,9 @@ namespace ServerProject
     {
         private Socket m_Socket;
         private Stream m_NetworkStream;
-        private StreamReader m_Reader;
-        private StreamWriter m_Writer;
+        private BinaryReader m_Reader;
+        private BinaryWriter m_Writer;
+        private BinaryFormatter formatter;
         private object m_ReadLock;
         private object m_WriteLock;
 
@@ -27,8 +29,10 @@ namespace ServerProject
 
             m_NetworkStream = new NetworkStream(socket, true);
 
-            m_Reader = new StreamReader(m_NetworkStream, Encoding.UTF8);
-            m_Writer = new StreamWriter(m_NetworkStream, Encoding.UTF8);
+            m_Reader = new BinaryReader();
+            m_Writer = new BinaryWriter();
+
+            formatter = new BinaryFormatter();
         }
 
         public void Close()

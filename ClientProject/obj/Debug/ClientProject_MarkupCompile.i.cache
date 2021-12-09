@@ -4,7 +4,7 @@
 exe
 C#
 .cs
-C:\Users\w025157k\source\repos\ServerProject\ClientProject\obj\Debug\
+C:\Users\w025157k\CNA\CNA-Tutorials\ClientProject\obj\Debug\
 ClientProject
 none
 false
@@ -13,8 +13,8 @@ DEBUG;TRACE
 11151548125
 1-1052891362
 51752698808
-13-1505183044
+14600187324
 MainWindow.xaml;
 
-False
+True
 
