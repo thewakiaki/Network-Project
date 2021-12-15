@@ -41,8 +41,10 @@ namespace ServerProject
                 {
                     case PacketType.PrivateMessage:
                         break;
+
                     case PacketType.ClientName:
                         break;
+
                     case PacketType.ChatMessage:
 
                         ChatMessagePacket chatPacket = (ChatMessagePacket)receivedMessage;
@@ -55,17 +57,6 @@ namespace ServerProject
 
                         break;
                 }
-                //string message = GetReturnMessage(receivedMessage);
-
-                //for(int i = 0; i < m_Clients.Count; ++i)
-                //{
-                //    m_Clients[i].Send(message);
-                //}
-
-                //if (message == "Goodbye")
-                //{
-                //    break;
-                //}
             }
 
             m_Clients[index].Close();
