@@ -12,3 +12,13 @@ C:\Users\w025157k\CNA\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.csproj
 C:\Users\w025157k\CNA\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.csproj.CoreCompileInputs.cache
 C:\Users\w025157k\CNA\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.exe
 C:\Users\w025157k\CNA\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.pdb
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\bin\Debug\ServerProject.exe.config
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\bin\Debug\ServerProject.exe
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\bin\Debug\ServerProject.pdb
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\bin\Debug\Packets.dll
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\bin\Debug\Packets.pdb
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.csprojAssemblyReference.cache
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.csproj.CoreCompileInputs.cache
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.csproj.CopyComplete
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.exe
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.pdb

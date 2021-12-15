@@ -6,6 +6,8 @@ using System.Threading;
 using System.Net.Sockets;
 using System.Net;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using Packets;
 
 namespace ClientProject
 {
@@ -13,8 +15,9 @@ namespace ClientProject
     {
         private TcpClient m_tcpClient;
         private NetworkStream m_stream;
-        private StreamWriter m_writer;
-        private StreamReader m_reader;
+        private BinaryWriter m_writer;
+        private BinaryReader m_reader;
+        private BinaryFormatter m_formatter;
         private MainWindow m_form;
 
         public Client()
@@ -28,8 +31,9 @@ namespace ClientProject
             {
                 m_tcpClient.Connect(ipAddress, port);
                 m_stream = m_tcpClient.GetStream();
-                m_writer = new StreamWriter(m_stream, Encoding.UTF8);
-                m_reader = new StreamReader(m_stream, Encoding.UTF8);
+                m_writer = new BinaryWriter(m_stream, Encoding.UTF8);
+                m_reader = new BinaryReader(m_stream, Encoding.UTF8);
+                m_formatter = new BinaryFormatter();
                 return true;
 
             }
@@ -57,13 +61,20 @@ namespace ClientProject
         {
             while (m_tcpClient.Connected)
             {
-                m_form.UpdateChatDisplay(m_reader.ReadLine());
+                m_form.UpdateChatDisplay(m_reader.ReadString());
             }
         }
 
-        public void SendMessage(string message)
+        public void SendMessage(Packet message)
         {
-            m_writer.WriteLine(message);
+            MemoryStream ms = new MemoryStream();
+            m_formatter.Serialize(ms, message);
+
+            byte[] buffer = ms.GetBuffer();
+
+            m_writer.Write(buffer.Length);
+            m_writer.Write(buffer);
+
             m_writer.Flush();
         }
 

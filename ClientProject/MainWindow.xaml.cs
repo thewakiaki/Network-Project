@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Packets;
 
 namespace ClientProject
 {
@@ -56,15 +57,10 @@ namespace ClientProject
                     else
                     {
                         string username = Username.Text;
-                        //if (ChatDisplay.Text == "")
-                        //{
-                        //    m_client.SendMessage(username + ": " + message);
-                        //}
-                        //else
-                        //{
-                        //    m_client.SendMessage("\n" + username + ": " + message);
-                        //}
-                         m_client.SendMessage(username + ": " + message);
+
+                        ChatMessagePacket chatPacket = new ChatMessagePacket((username + ": " + message));
+                         
+                        m_client.SendMessage(chatPacket);
                     }
 
                 }

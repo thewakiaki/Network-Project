@@ -24,3 +24,19 @@ C:\Users\w025157k\CNA\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.g.reso
 C:\Users\w025157k\CNA\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.csproj.CoreCompileInputs.cache
 C:\Users\w025157k\CNA\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.exe
 C:\Users\w025157k\CNA\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.pdb
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.csprojAssemblyReference.cache
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\MainWindow.g.cs
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject_Content.g.cs
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject_MarkupCompile.cache
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject_MarkupCompile.lref
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.exe
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.pdb
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\bin\Debug\ClientProject.exe.config
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\bin\Debug\ClientProject.exe
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\bin\Debug\ClientProject.pdb
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\bin\Debug\Packets.dll
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\bin\Debug\Packets.pdb
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\MainWindow.baml
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.g.resources
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.csproj.CoreCompileInputs.cache
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.csproj.CopyComplete

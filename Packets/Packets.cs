@@ -5,20 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Packets
-{ 
-    [Serializable]
-    public class Packets
+{
+    public enum PacketType
     {
-        protected enum PacketType
-        {
-            ChatMessage,
-            PrivateMessage,
-            ClientName
-        }
+        ChatMessage,
+        PrivateMessage,
+        ClientName
+    }
 
+    [Serializable]
+    public class Packet
+    {
         protected PacketType packType;
 
-        PacketType packetType
+        public PacketType packetType
         {
             get { return packType; }
             set { packType = value; }
@@ -26,11 +26,11 @@ namespace Packets
     }
 
     [Serializable]
-    public class ChatMessagePacket : Packets
+    public class ChatMessagePacket : Packet
     {
         public string message;
 
-        ChatMessagePacket(string messages)
+        public ChatMessagePacket(string messages)
         {
             message = messages;
             packType = PacketType.ChatMessage;

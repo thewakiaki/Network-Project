@@ -8,7 +8,7 @@ using System.Threading;
 using System.Net.Sockets;
 using System.Net;
 using System.IO;
-using System.Text;
+using Packets;
 
 namespace ServerProject
 {
@@ -29,23 +29,43 @@ namespace ServerProject
         {
             ConnectedClients client = m_Clients[index];
 
-            client.Send("Connected to server");
+            ChatMessagePacket initialMessage = new ChatMessagePacket("Connected To Server");
 
-            string receivedMessage;
+            client.Send(initialMessage);
+
+            Packet receivedMessage;
 
             while ((receivedMessage = client.Read()) != null)
             {
-                string message = GetReturnMessage(receivedMessage);
-
-                for(int i = 0; i < m_Clients.Count; ++i)
+                switch (receivedMessage.packetType)
                 {
-                    m_Clients[i].Send(message);
-                }
+                    case PacketType.PrivateMessage:
+                        break;
+                    case PacketType.ClientName:
+                        break;
+                    case PacketType.ChatMessage:
 
-                if (message == "Goodbye")
-                {
-                    break;
+                        ChatMessagePacket chatPacket = (ChatMessagePacket)receivedMessage;
+
+
+                        for (int i = 0; i < m_Clients.Count; ++i)
+                        {
+                            m_Clients[i].Send(new ChatMessagePacket(GetReturnMessage(chatPacket.message)));
+                        }
+
+                        break;
                 }
+                //string message = GetReturnMessage(receivedMessage);
+
+                //for(int i = 0; i < m_Clients.Count; ++i)
+                //{
+                //    m_Clients[i].Send(message);
+                //}
+
+                //if (message == "Goodbye")
+                //{
+                //    break;
+                //}
             }
 
             m_Clients[index].Close();
