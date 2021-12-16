@@ -22,3 +22,6 @@ E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\obj\Debug\Serv
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.csproj.CopyComplete
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.exe
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.pdb
+C:\Users\w025157k\CNA\CNA-Tutorials\ServerProject\bin\Debug\Packets.dll
+C:\Users\w025157k\CNA\CNA-Tutorials\ServerProject\bin\Debug\Packets.pdb
+C:\Users\w025157k\CNA\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.csproj.CopyComplete

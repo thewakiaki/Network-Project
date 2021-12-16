@@ -16,7 +16,7 @@ namespace ClientProject
         private TcpClient m_tcpClient;
         private NetworkStream m_stream;
         private BinaryWriter m_writer;
-        private StreamReader m_reader;
+        private BinaryReader m_reader;
         private BinaryFormatter m_formatter;
         private MainWindow m_form;
 
@@ -32,7 +32,7 @@ namespace ClientProject
                 m_tcpClient.Connect(ipAddress, port);
                 m_stream = m_tcpClient.GetStream();
                 m_writer = new BinaryWriter(m_stream, Encoding.UTF8);
-                m_reader = new StreamReader(m_stream, Encoding.UTF8);
+                m_reader = new BinaryReader(m_stream, Encoding.UTF8);
                 m_formatter = new BinaryFormatter();
                 return true;
 
@@ -61,7 +61,31 @@ namespace ClientProject
         {
             while (m_tcpClient.Connected)
             {
-                m_form.UpdateChatDisplay(m_reader.ReadLine());
+                int numberOfBytes;
+
+                if((numberOfBytes = m_reader.ReadInt32()) != -1)
+                {
+                    byte[] buffer = m_reader.ReadBytes(numberOfBytes);
+
+                    MemoryStream ms = new MemoryStream(buffer);
+
+                    Packet dataPacket = (Packet)m_formatter.Deserialize(ms);
+
+                    switch (dataPacket.packetType)
+                    {
+                        case PacketType.ChatMessage:
+                            ChatMessagePacket message = (ChatMessagePacket)dataPacket;
+                            m_form.UpdateChatDisplay(message.message);
+                            break;
+
+                        case PacketType.PrivateMessage:
+                            break;
+
+                        case PacketType.ClientName:
+                            break;
+                    }
+                }
+
             }
         }
 

@@ -37,7 +37,7 @@ namespace ClientProject
 
         private void Send_Message_Button(object sender, RoutedEventArgs e)
         {
-            #region Send message Version 1
+           
             if (Connection.IsChecked == true)
             {
                 if (EnterMessage.Text == "")
@@ -69,7 +69,7 @@ namespace ClientProject
             {
                 MessageBox.Show("Not connected to server", "Warning");
             }
-            #endregion
+           
         }
 
         private void Input_Message_Box(object sender, TextChangedEventArgs e)
@@ -104,6 +104,11 @@ namespace ClientProject
                 ChatDisplay.Text += message + Environment.NewLine;
                 ChatDisplay.ScrollToEnd();
             });
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }
