@@ -56,9 +56,7 @@ namespace ClientProject
                     }
                     else
                     {
-                        string username = Username.Text;
-
-                        ChatMessagePacket chatPacket = new ChatMessagePacket((username + ": " + message));
+                        ChatMessagePacket chatPacket = new ChatMessagePacket(m_client.nickName + ": " + message);
                          
                         m_client.SendMessage(chatPacket);
                     }
@@ -94,7 +92,7 @@ namespace ClientProject
 
         private void Encryption_Check_Box(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
         public void UpdateChatDisplay(string message)
@@ -109,6 +107,26 @@ namespace ClientProject
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if(ClientUserame.Text == "" || ClientNickname.Text == "")
+            {
+                MessageBox.Show("Fill in both the username and nickname then click submit", "Warning");
+            }
+            else
+            {
+                m_client.userName = ClientUserame.Text;
+                m_client.nickName = ClientNickname.Text;
+
+                ClientNamePacket clientName = new ClientNamePacket(m_client.userName, m_client.nickName);
+                m_client.SendMessage(clientName);
+
+                Login.Visibility = Visibility.Hidden;
+                ChatDisplayPanel.Visibility = Visibility.Visible;
+            }           
+            
         }
     }
 }

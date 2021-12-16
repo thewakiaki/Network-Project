@@ -20,6 +20,9 @@ namespace ClientProject
         private BinaryFormatter m_formatter;
         private MainWindow m_form;
 
+        public string userName;
+        public string nickName;
+
         public Client()
         {
             m_tcpClient = new TcpClient();

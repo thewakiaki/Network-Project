@@ -36,4 +36,19 @@ namespace Packets
             packType = PacketType.ChatMessage;
         }
     }
+
+    [Serializable]
+    public class ClientNamePacket : Packet
+    {
+        public string username;
+        public string nickname;
+
+        public ClientNamePacket(string user, string nick)
+        {
+            username = user;
+            nickname = nick;
+
+            packType = PacketType.ClientName;
+        }
+    }
 }

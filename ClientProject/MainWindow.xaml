@@ -64,30 +64,83 @@
                 " Name="SendButton"/>
     </Grid>-->
 
+
     <Grid Background="#303030">
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.35*"/>
-            <ColumnDefinition Width="0.3*"/>
-            <ColumnDefinition Width="0.35*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="0.25*"/>
-            <RowDefinition Height="0.5*"/>
-            <RowDefinition Height="0.25*"/>
-        </Grid.RowDefinitions>
+        <StackPanel x:Name="Login" Width="1272" Height="689" Visibility="Hidden">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="445"/>
+                    <ColumnDefinition Width="382"/>
+                    <ColumnDefinition Width="445"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="170"/>
+                    <RowDefinition Height="349"/>
+                    <RowDefinition Height="170"/>
+                </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="1" Grid.Column="1" Margin="10, 10, 10, 300" Text="Enter Username and Nickname" FontSize="26" TextAlignment="Center" TextWrapping="Wrap" Foreground="White"/>
-        
-        <TextBlock Grid.Row="1" Grid.Column="1" Margin="10, 100, 10, 200" Text="Username" FontSize="26" TextAlignment="Left" TextWrapping="Wrap" Foreground="White"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="10, 150, 10, 150" FontSize="26" TextAlignment="Left" TextWrapping="Wrap" Foreground="White" TextChanged="TextBox_TextChanged"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Margin="10, 10, 10, 300" Text="Enter Username and Nickname" Foreground="White" FontSize="25" TextAlignment="Center"/>
+                
+                <TextBlock Grid.Row="1" Grid.Column="1" Margin="10, 100, 10, 210" Text="Username" Foreground="White" FontSize="25" TextAlignment="Left"/>
+                <TextBox x:Name="ClientUserame" Grid.Row="1" Grid.Column="1" Margin="10, 140, 10, 170" Text="" Foreground="Black" FontSize="25"/>
 
-        <TextBlock Grid.Row="1" Grid.Column="1" Margin="10, 200, 10, 100" Text="Nickname" FontSize="26" TextAlignment="Left" TextWrapping="Wrap" Foreground="White"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="10, 250, 10, 50" FontSize="26" TextAlignment="Left" TextWrapping="Wrap" Foreground="White" TextChanged="TextBox_TextChanged"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Margin="10, 220, 10, 90" Text="Nickname" Foreground="White" FontSize="25" TextAlignment="Left"/>
+                <TextBox x:Name="ClientNickname" Grid.Row="1" Grid.Column="1" Margin="10, 260, 10, 50" Text="" Foreground="Black" FontSize="25"/>
 
-        <Button Grid.Column="1" Grid.Row="2" Margin="50, 20, 30, 110" Content="Submit" FontSize="20"/>
+                <Button Grid.Column="1" Grid.Row="2" Margin="40, 10, 40, 110" Content="Submit" FontSize="30" Click="Button_Click_1"/>
+            </Grid>
+        </StackPanel>
+
+        <StackPanel x:Name="ChatDisplayPanel" Width="1272" Height="689" Visibility="Visible">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="750"/>
+                    <ColumnDefinition Width="222"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="69"/>
+                    <RowDefinition Height="530"/>
+                    <RowDefinition Height="90"/>
+                </Grid.RowDefinitions>
+
+
+                <Image Grid.Column="0" Grid.Row="3" Source="/Default Profile.png" Margin="5, 5 , 200, 5"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="3" Foreground="White" Text="Username: " Margin="100, 10, 130, 55" FontSize="15"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" Foreground="White" Text="Nickname: " Margin="100, 50, 130, 15" FontSize="15"/>
+
+                <TextBlock Grid.Column="3" Grid.Row="1" Margin="10, 10, 10, 10" Foreground="White" Text="Messages From"/>
+                <TextBox Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" Margin="20, 70, 20, 20"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="3" Margin="175, 10, 10 ,55" Text="9charaters" Foreground="White" Name="UsernameText" FontSize="15"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" Margin="175, 50, 10 ,15" Text="14Charaters" Foreground="White" Name="NicknameText" FontSize="15"/>
+
+                <TextBlock Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" Text="  Server IP:" FontSize="16"/>
+                <TextBox Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Center" Text="192.168.0.1" FontSize="16"/>
+
+                <TextBlock Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" Text="    Port:" FontSize="16"/>
+                <TextBox Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Text="4444" FontSize="16"/>
+
+                <CheckBox Grid.Column="5" Grid.Row="0" VerticalAlignment="Center" Checked="Server_Check_Box" Name="Connection"/>
+                <TextBlock Grid.Column="5" Grid.Row="0" Foreground="White" Text="Enable Server" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                <CheckBox Grid.Column="5" VerticalAlignment="Center" Checked="Encryption_Check_Box" Grid.ColumnSpan="2" HorizontalAlignment="Right" Width="89"/>
+                <TextBlock Grid.Column="6" Grid.Row="0" Foreground="White" Text="  Encryption" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="1" Margin="60, 10, 60, 10" Foreground="White" Text="Friends" FontSize="30" TextAlignment="Center"/>
+                <TextBox Grid.Column="1" Grid.Row="1" Margin="10" TextChanged="Chat_Display" Name="ChatDisplay" />
+
+                <TextBox Grid.Column="1" Grid.Row="3" TextChanged="Input_Message_Box" Margin="10, 20, 225, 20" Name="EnterMessage" Text="" FontSize="16"/>
+                <Button Grid.Column="1" Grid.Row="3" Margin = "550, 10, 10, 10" Content="Send message" MaxHeight="50" Click="Send_Message_Button" FontSize="20" Name="SendButton"/>
+            </Grid>
+        </StackPanel>
 
     </Grid>
+
+
+
 
 
 </Window>

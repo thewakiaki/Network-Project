@@ -16,6 +16,7 @@ namespace ServerProject
     {
         private TcpListener m_tcpListener;
         private ConcurrentDictionary<int, ConnectedClients> m_Clients;
+        private ConcurrentDictionary<string, string> m_Names;
 
         public Server(string ipAddress, int port)
         {
@@ -33,23 +34,27 @@ namespace ServerProject
 
             client.Send(initialMessage);
 
-            Packet receivedMessage;
+            Packet receivedData;
 
-            while ((receivedMessage = client.Read()) != null)
+            while ((receivedData = client.Read()) != null)
             {
-                switch (receivedMessage.packetType)
+                switch (receivedData.packetType)
                 {
                     case PacketType.PrivateMessage:
                         break;
 
                     case PacketType.ClientName:
+
+                        ClientNamePacket namePacket = (ClientNamePacket)receivedData;
+                        m_Names.TryAdd(namePacket.username, namePacket.nickname);
+
                         break;
 
                     case PacketType.ChatMessage:
 
-                        ChatMessagePacket chatPacket = (ChatMessagePacket)receivedMessage;
+                        ChatMessagePacket chatPacket = (ChatMessagePacket)receivedData;
 
-
+                        
                         for (int i = 0; i < m_Clients.Count; ++i)
                         {
                             m_Clients[i].Send(new ChatMessagePacket(GetReturnMessage(chatPacket.message)));
@@ -73,6 +78,8 @@ namespace ServerProject
         public void Start()
         {
             m_Clients = new ConcurrentDictionary<int, ConnectedClients>();
+            m_Names = new ConcurrentDictionary<string, string>();
+
             int clientIndex = 0;
 
             m_tcpListener.Start();
@@ -92,6 +99,7 @@ namespace ServerProject
                 clientIndex++;
 
                 m_Clients.TryAdd(index, client);
+                
 
                 Thread thread = new Thread(() => { ClientMethod(index); });
                 thread.Start();
