@@ -47,19 +47,12 @@ namespace ClientProject
                 else
                 {
                     string message = EnterMessage.Text;
-                    EnterMessage.Text = "";
-
-                    if (Username.Text == "")
-                    {
-                        MessageBox.Show("Enter a user name first!", "Warning");
-                        EnterMessage.Text = message;
-                    }
-                    else
-                    {
-                        ChatMessagePacket chatPacket = new ChatMessagePacket(m_client.nickName + ": " + message);
+                    EnterMessage.Text = "";                  
+                    
+                    ChatMessagePacket chatPacket = new ChatMessagePacket(m_client.nickName + ": " + message);
                          
-                        m_client.SendMessage(chatPacket);
-                    }
+                    m_client.SendMessage(chatPacket);
+                    
 
                 }
             }
@@ -117,14 +110,24 @@ namespace ClientProject
             }
             else
             {
-                m_client.userName = ClientUserame.Text;
-                m_client.nickName = ClientNickname.Text;
+                if (ClientUserame.Text.Length > 14 || NicknameText.Text.Length > 14)
+                {
+                    MessageBox.Show("Username and Nickname can't be longer than 14 characters");
+                }
+                else
+                {
+                    m_client.userName = ClientUserame.Text;
+                    m_client.nickName = ClientNickname.Text;
 
-                ClientNamePacket clientName = new ClientNamePacket(m_client.userName, m_client.nickName);
-                m_client.SendMessage(clientName);
+                    UsernameText.Text = m_client.userName;
+                    NicknameText.Text = m_client.nickName;
 
-                Login.Visibility = Visibility.Hidden;
-                ChatDisplayPanel.Visibility = Visibility.Visible;
+                    ClientNamePacket clientName = new ClientNamePacket(m_client.userName, m_client.nickName);
+                    m_client.SendMessage(clientName);
+
+                    Login.Visibility = Visibility.Hidden;
+                    ChatDisplayPanel.Visibility = Visibility.Visible;
+                }
             }           
             
         }
