@@ -46,12 +46,47 @@ namespace ClientProject
                 }
                 else
                 {
-                    string message = EnterMessage.Text;
-                    EnterMessage.Text = "";                  
-                    
-                    ChatMessagePacket chatPacket = new ChatMessagePacket(m_client.nickName + ": " + message);
-                         
-                    m_client.SendMessage(chatPacket);
+                    if (EnterMessage.Text[0] == '/')
+                    {
+                        string[] splitMessage = EnterMessage.Text.Split();
+
+                        string message = "";
+                        string targetClientName;
+
+                        for(int i = 1; i < splitMessage.Length; ++i)
+                        {
+                            if (i == splitMessage.Length - 1)
+                            {
+                                message += splitMessage[i];
+                            }
+                            else
+                            {
+                                message += splitMessage[i] + " ";
+                            }
+                        }
+
+                        char[] cName = new char[splitMessage[0].Length - 1];
+
+                        for(int i = 1; i < splitMessage[0].Length; ++i)
+                        {
+                            cName[i - 1] = splitMessage[0][i];
+                        }
+
+                        targetClientName = new string(cName);
+
+                        PrivateMessagePacket privateMessage = new PrivateMessagePacket(m_client.userName + ": " + message, targetClientName, m_client.userName);
+
+                        m_client.SendMessage(privateMessage);
+                    }
+                    else
+                    {
+                        string message = EnterMessage.Text;
+                        EnterMessage.Text = "";
+
+                        ChatMessagePacket chatPacket = new ChatMessagePacket(m_client.nickName + ": " + message);
+
+                        m_client.SendMessage(chatPacket);
+                    }
                     
 
                 }

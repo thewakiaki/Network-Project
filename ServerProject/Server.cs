@@ -16,7 +16,6 @@ namespace ServerProject
     {
         private TcpListener m_tcpListener;
         private ConcurrentDictionary<int, ConnectedClients> m_Clients;
-        private ConcurrentDictionary<string, string> m_Names;
 
         public Server(string ipAddress, int port)
         {
@@ -41,12 +40,32 @@ namespace ServerProject
                 switch (receivedData.packetType)
                 {
                     case PacketType.PrivateMessage:
+
+                        PrivateMessagePacket privateChatPacket = (PrivateMessagePacket)receivedData;
+
+                        for (int i = 0; i < m_Clients.Count; ++i)
+                        {
+                            if(privateChatPacket.targetClient == m_Clients[i].clientUsername || privateChatPacket.targetClient == m_Clients[i].clientUsername)
+                            {
+                                m_Clients[i].Send(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
+                            }
+                            else if(privateChatPacket.sendingClient == m_Clients[i].clientUsername || privateChatPacket.sendingClient == m_Clients[i].clientUsername)
+                            {
+                                m_Clients[i].Send(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+
                         break;
 
                     case PacketType.ClientName:
 
                         ClientNamePacket namePacket = (ClientNamePacket)receivedData;
-                        m_Names.TryAdd(namePacket.username, namePacket.nickname);
+                        client.clientUsername = namePacket.username;
+                        client.clientNickName = namePacket.nickname;
 
                         break;
 
@@ -78,7 +97,7 @@ namespace ServerProject
         public void Start()
         {
             m_Clients = new ConcurrentDictionary<int, ConnectedClients>();
-            m_Names = new ConcurrentDictionary<string, string>();
+            
 
             int clientIndex = 0;
 

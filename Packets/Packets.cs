@@ -51,4 +51,20 @@ namespace Packets
             packType = PacketType.ClientName;
         }
     }
+
+    [Serializable]
+    public class PrivateMessagePacket : Packet
+    {
+        public string message;
+        public string targetClient;
+        public string sendingClient;
+        
+        public PrivateMessagePacket(string messages, string target, string sender)
+        {
+            message = messages;
+            targetClient = target;
+            sendingClient = sender;
+            packType = PacketType.PrivateMessage;
+        }
+    }
 }

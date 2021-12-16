@@ -20,6 +20,9 @@ namespace ServerProject
         private object m_readLock;
         private object m_writeLock;
 
+        public string clientUsername;
+        public string clientNickName;
+
 
         public ConnectedClients(Socket socket)
         {
