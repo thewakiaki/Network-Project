@@ -1,6 +1,5 @@
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\Packets\bin\Debug\Packets.dll
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\Packets\bin\Debug\Packets.pdb
-E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\Packets\obj\Debug\Packets.csprojAssemblyReference.cache
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\Packets\obj\Debug\Packets.csproj.CoreCompileInputs.cache
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\Packets\obj\Debug\Packets.dll
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\Packets\obj\Debug\Packets.pdb
@@ -10,3 +9,4 @@ C:\Users\w025157k\CNA\CNA-Tutorials\Packets\obj\Debug\Packets.csprojAssemblyRefe
 C:\Users\w025157k\CNA\CNA-Tutorials\Packets\obj\Debug\Packets.csproj.CoreCompileInputs.cache
 C:\Users\w025157k\CNA\CNA-Tutorials\Packets\obj\Debug\Packets.dll
 C:\Users\w025157k\CNA\CNA-Tutorials\Packets\obj\Debug\Packets.pdb
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\Packets\obj\Debug\Packets.csproj.AssemblyReference.cache
