@@ -38,7 +38,6 @@ E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\bin\Debug\Pack
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\MainWindow.baml
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.g.resources
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.csproj.CoreCompileInputs.cache
-E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.csproj.CopyComplete
 C:\Users\w025157k\CNA\CNA-Tutorials\ClientProject\bin\Debug\Packets.dll
 C:\Users\w025157k\CNA\CNA-Tutorials\ClientProject\bin\Debug\Packets.pdb
 C:\Users\w025157k\CNA\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.csproj.CopyComplete

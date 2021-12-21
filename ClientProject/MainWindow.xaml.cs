@@ -46,14 +46,17 @@ namespace ClientProject
                 }
                 else
                 {
-                    if (EnterMessage.Text[0] == '/')
+                    string[] splitMessage = EnterMessage.Text.Split();
+
+                    string message = "";
+                    string targetClientName;
+
+                    if (splitMessage[0] == "/w")
                     {
-                        string[] splitMessage = EnterMessage.Text.Split();
 
-                        string message = "";
-                        string targetClientName;
-
-                        for(int i = 1; i < splitMessage.Length; ++i)
+                        targetClientName = splitMessage[1];
+                        
+                        for(int i = 2; i < splitMessage.Length; ++i)
                         {
                             if (i == splitMessage.Length - 1)
                             {
@@ -65,22 +68,14 @@ namespace ClientProject
                             }
                         }
 
-                        char[] cName = new char[splitMessage[0].Length - 1];
-
-                        for(int i = 1; i < splitMessage[0].Length; ++i)
-                        {
-                            cName[i - 1] = splitMessage[0][i];
-                        }
-
-                        targetClientName = new string(cName);
-
                         PrivateMessagePacket privateMessage = new PrivateMessagePacket(m_client.userName + ": " + message, targetClientName, m_client.userName);
+                        EnterMessage.Text = "";
 
                         m_client.SendMessage(privateMessage);
                     }
                     else
                     {
-                        string message = EnterMessage.Text;
+                        message = EnterMessage.Text;
                         EnterMessage.Text = "";
 
                         ChatMessagePacket chatPacket = new ChatMessagePacket(m_client.nickName + ": " + message);

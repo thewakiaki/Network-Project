@@ -45,11 +45,11 @@ namespace ServerProject
 
                         for (int i = 0; i < m_Clients.Count; ++i)
                         {
-                            if(privateChatPacket.targetClient == m_Clients[i].clientUsername || privateChatPacket.targetClient == m_Clients[i].clientUsername)
+                            if(privateChatPacket.targetClient == m_Clients[i].clientUsername || privateChatPacket.targetClient == m_Clients[i].clientNickName)
                             {
                                 m_Clients[i].Send(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
                             }
-                            else if(privateChatPacket.sendingClient == m_Clients[i].clientUsername || privateChatPacket.sendingClient == m_Clients[i].clientUsername)
+                            else if(privateChatPacket.sendingClient == m_Clients[i].clientUsername || privateChatPacket.sendingClient == m_Clients[i].clientNickName)
                             {
                                 m_Clients[i].Send(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
                             }
