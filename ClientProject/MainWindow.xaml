@@ -71,11 +71,15 @@
                 <CheckBox Grid.Column="1" VerticalAlignment="Center" Checked="Encryption_Check_Box" Margin="250, 25, 480, 25"/>
                 <TextBlock Grid.Column="1" Foreground="White" Text="Encryption"  Margin="150,20, 500, 20" FontSize="20"/>
 
-                <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="1" Margin="60, 10, 60, 10" Foreground="White" Text="Friends" FontSize="30" TextAlignment="Center"/>
-                <TextBox Grid.Column="1" Grid.Row="1" Margin="10" TextChanged="Chat_Display" Name="ChatDisplay" />
+                <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="1" Margin="60, 10, 60, 10" Foreground="White" Text="Chat" FontSize="30" TextAlignment="Center"/>
+                <TextBox Grid.Column="0" Grid.Row="1" Margin="25" TextChanged="Chat_Display" Name="ChatDisplay" />
 
                 <TextBox Grid.Column="1" Grid.Row="3" TextChanged="Input_Message_Box" Margin="10, 20, 225, 20" Name="EnterMessage" Text="" FontSize="16"/>
                 <Button Grid.Column="1" Grid.Row="3" Margin = "550, 10, 10, 10" Content="Send message" MaxHeight="50" Click="Send_Message_Button" FontSize="20" Name="SendButton"/>
+
+                <StackPanel Grid.Row="1" Grid.Column="1" Width="750" Height="530" Name="ChooseGame" Visibility="Visible">
+                    <Rectangle Width="700" Height="480" Margin="10, 30, 10, 10" Fill="White"/>
+                </StackPanel>
             </Grid>
         </StackPanel>
 

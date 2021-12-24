@@ -15,6 +15,7 @@ namespace ServerProject
     class Server
     {
         private TcpListener m_tcpListener;
+        private UdpClient m_udpListener;
         private ConcurrentDictionary<int, ConnectedClients> m_Clients;
 
         public Server(string ipAddress, int port)
@@ -22,20 +23,24 @@ namespace ServerProject
             IPAddress ip = IPAddress.Parse(ipAddress);
             m_tcpListener = new TcpListener(ip, port);
 
+            m_udpListener = new UdpClient(port);
+            Thread udpThread = new Thread(() => UDPListen());
+            udpThread.Start();
+
             Start();
         }
 
-        private void ClientMethod(int index)
+        private void ClientMethodTCP(int index)
         {
             ConnectedClients client = m_Clients[index];
 
             ChatMessagePacket initialMessage = new ChatMessagePacket("Connected To Server");
 
-            client.Send(initialMessage);
+            client.SendTCP(initialMessage);
 
             Packet receivedData;
 
-            while ((receivedData = client.Read()) != null)
+            while ((receivedData = client.ReadTCP()) != null)
             {
                 switch (receivedData.packetType)
                 {
@@ -45,13 +50,13 @@ namespace ServerProject
 
                         for (int i = 0; i < m_Clients.Count; ++i)
                         {
-                            if(privateChatPacket.targetClient == m_Clients[i].clientUsername || privateChatPacket.targetClient == m_Clients[i].clientNickName)
+                            if (privateChatPacket.targetClient == m_Clients[i].clientUsername || privateChatPacket.targetClient == m_Clients[i].clientNickName)
                             {
-                                m_Clients[i].Send(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
+                                m_Clients[i].SendTCP(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
                             }
-                            else if(privateChatPacket.sendingClient == m_Clients[i].clientUsername || privateChatPacket.sendingClient == m_Clients[i].clientNickName)
+                            else if (privateChatPacket.sendingClient == m_Clients[i].clientUsername || privateChatPacket.sendingClient == m_Clients[i].clientNickName)
                             {
-                                m_Clients[i].Send(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
+                                m_Clients[i].SendTCP(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
                             }
                             else
                             {
@@ -73,11 +78,17 @@ namespace ServerProject
 
                         ChatMessagePacket chatPacket = (ChatMessagePacket)receivedData;
 
-                        
+
                         for (int i = 0; i < m_Clients.Count; ++i)
                         {
-                            m_Clients[i].Send(new ChatMessagePacket(GetReturnMessage(chatPacket.message)));
+                            m_Clients[i].SendTCP(new ChatMessagePacket(GetReturnMessage(chatPacket.message)));
                         }
+
+                        break;
+                    case PacketType.LoginPacket:
+
+                        LoginPacket loginPacket = (LoginPacket)receivedData;
+                        m_Clients[index].EndPoint = loginPacket.EndPoint;
 
                         break;
                 }
@@ -120,7 +131,7 @@ namespace ServerProject
                 m_Clients.TryAdd(index, client);
                 
 
-                Thread thread = new Thread(() => { ClientMethod(index); });
+                Thread thread = new Thread(() => { ClientMethodTCP(index); });
                 thread.Start();
             }
 
@@ -131,5 +142,29 @@ namespace ServerProject
             m_tcpListener.Stop();
         }
 
+        private void UDPListen()
+        {
+            try
+            {
+                IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, 0);
+
+                while (true)
+                {
+                    byte[] buffer = m_udpListener.Receive(ref endPoint);
+
+                    for(int i = 0; i < m_Clients.Count; ++i)
+                    {
+                        if(endPoint.ToString() == m_Clients[i].EndPoint.ToString())
+                        {
+                            m_udpListener.Send(buffer, buffer.Length, m_Clients[i].EndPoint);
+                        }
+                    }
+                }
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine("Client UDP Read Method exception: " + e.Message);
+            }
+        }
     }
 }

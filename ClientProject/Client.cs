@@ -13,6 +13,7 @@ namespace ClientProject
 {
     public  class Client
     {
+        private UdpClient m_udpClient;
         private TcpClient m_tcpClient;
         private NetworkStream m_stream;
         private BinaryWriter m_writer;
@@ -33,10 +34,17 @@ namespace ClientProject
             try
             {
                 m_tcpClient.Connect(ipAddress, port);
+                m_udpClient = new UdpClient();
+                m_udpClient.Connect(ipAddress, port);
                 m_stream = m_tcpClient.GetStream();
+                m_formatter = new BinaryFormatter();
                 m_writer = new BinaryWriter(m_stream, Encoding.UTF8);
                 m_reader = new BinaryReader(m_stream, Encoding.UTF8);
-                m_formatter = new BinaryFormatter();
+
+                Thread UdpThread = new Thread(() => ProcessServerResponseUDP());
+                UdpThread.Start();
+                Login();
+               
                 return true;
 
             }
@@ -46,21 +54,26 @@ namespace ClientProject
                 return false;
             }
         }
+        public void Login()
+        {
+            SendMessageTCP(new LoginPacket((IPEndPoint)m_udpClient.Client.LocalEndPoint));
+        }
 
         public void Run()
         {
             m_form = new MainWindow(this);
             m_form.Connection.IsChecked = true;
 
-            Thread thread = new Thread(() => ProcessServerResponse());
+            Thread thread = new Thread(() => ProcessServerResponseTCP());
             thread.Start();
 
             m_form.ShowDialog();
 
             m_tcpClient.Close();
+            m_udpClient.Close();
         }
 
-        private void ProcessServerResponse()
+        private void ProcessServerResponseTCP()
         {
             while (m_tcpClient.Connected)
             {
@@ -92,10 +105,46 @@ namespace ClientProject
             }
         }
 
-        public void SendMessage(Packet message)
+        private void ProcessServerResponseUDP()
+        {
+            try
+            {
+                IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, 0);
+
+                while(true)
+                {
+                    byte[] buffer = m_udpClient.Receive(ref endPoint);
+
+                    MemoryStream ms = new MemoryStream(buffer);
+                    Packet dataPacket = (Packet)m_formatter.Deserialize(ms);
+
+                    switch (dataPacket.packetType)
+                    {
+                        case PacketType.ChatMessage:
+                            ChatMessagePacket message = (ChatMessagePacket)dataPacket;
+                            m_form.UpdateChatDisplay(message.message);
+                            break;
+
+                        case PacketType.PrivateMessage:
+                            break;
+
+                        case PacketType.ClientName:
+                            break;
+                    }
+
+                }
+            }
+            catch(SocketException e)
+            {
+                Console.WriteLine("Client UDP Read Method exception: " + e.Message);
+            }
+
+        }
+
+        public void SendMessageTCP(Packet packet)
         {
             MemoryStream ms = new MemoryStream();
-            m_formatter.Serialize(ms, message);
+            m_formatter.Serialize(ms, packet);
 
             byte[] buffer = ms.GetBuffer();
 
@@ -103,6 +152,16 @@ namespace ClientProject
             m_writer.Write(buffer);
 
             m_writer.Flush();
+        }
+
+        public void SendMessageUDP(Packet packet)
+        {
+            MemoryStream ms = new MemoryStream();
+            m_formatter.Serialize(ms, packet);
+
+            byte[] buffer = ms.GetBuffer();
+
+            m_udpClient.Send(buffer, buffer.Length);
         }
 
     }

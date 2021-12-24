@@ -71,7 +71,7 @@ namespace ClientProject
                         PrivateMessagePacket privateMessage = new PrivateMessagePacket(m_client.userName + ": " + message, targetClientName, m_client.userName);
                         EnterMessage.Text = "";
 
-                        m_client.SendMessage(privateMessage);
+                        m_client.SendMessageTCP(privateMessage);
                     }
                     else
                     {
@@ -80,7 +80,7 @@ namespace ClientProject
 
                         ChatMessagePacket chatPacket = new ChatMessagePacket(m_client.nickName + ": " + message);
 
-                        m_client.SendMessage(chatPacket);
+                        m_client.SendMessageUDP(chatPacket);
                     }
                     
 
@@ -153,7 +153,7 @@ namespace ClientProject
                     NicknameText.Text = m_client.nickName;
 
                     ClientNamePacket clientName = new ClientNamePacket(m_client.userName, m_client.nickName);
-                    m_client.SendMessage(clientName);
+                    m_client.SendMessageTCP(clientName);
 
                     Login.Visibility = Visibility.Hidden;
                     ChatDisplayPanel.Visibility = Visibility.Visible;

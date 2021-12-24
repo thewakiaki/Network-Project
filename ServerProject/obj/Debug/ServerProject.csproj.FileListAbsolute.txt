@@ -24,3 +24,4 @@ C:\Users\w025157k\CNA\CNA-Tutorials\ServerProject\bin\Debug\Packets.dll
 C:\Users\w025157k\CNA\CNA-Tutorials\ServerProject\bin\Debug\Packets.pdb
 C:\Users\w025157k\CNA\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.csproj.CopyComplete
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.csproj.AssemblyReference.cache
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ServerProject\obj\Debug\ServerProject.csproj.CopyComplete

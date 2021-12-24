@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net;
+using System.Net.Sockets;
 
 namespace Packets
 {
@@ -10,7 +12,8 @@ namespace Packets
     {
         ChatMessage,
         PrivateMessage,
-        ClientName
+        ClientName,
+        LoginPacket
     }
 
     [Serializable]
@@ -66,5 +69,18 @@ namespace Packets
             sendingClient = sender;
             packType = PacketType.PrivateMessage;
         }
+    }
+
+    [Serializable]
+    public class LoginPacket : Packet
+    {
+        public IPEndPoint EndPoint;
+
+        public LoginPacket(IPEndPoint IpEndPoint)
+        {
+            EndPoint = IpEndPoint;
+            packType = PacketType.LoginPacket;
+        }
+
     }
 }

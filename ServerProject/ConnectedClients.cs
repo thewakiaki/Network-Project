@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using Packets;
@@ -19,6 +20,8 @@ namespace ServerProject
         private BinaryFormatter m_formatter;
         private object m_readLock;
         private object m_writeLock;
+
+        public IPEndPoint EndPoint;
 
         public string clientUsername;
         public string clientNickName;
@@ -47,7 +50,7 @@ namespace ServerProject
             m_socket.Close();
         }
 
-        public Packet Read()
+        public Packet ReadTCP()
         {
             lock (m_readLock)
             {
@@ -68,7 +71,7 @@ namespace ServerProject
             }
         }
 
-        public void Send(Packet message)
+        public void SendTCP(Packet message)
         {
             lock (m_writeLock)
             {
