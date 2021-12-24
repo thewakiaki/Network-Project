@@ -80,7 +80,10 @@ namespace ClientProject
 
                         ChatMessagePacket chatPacket = new ChatMessagePacket(m_client.nickName + ": " + message);
 
-                        m_client.SendMessageUDP(chatPacket);
+                        EncryptedChatMessagePacket eChatPacket = new EncryptedChatMessagePacket(m_client.EncryptString(chatPacket.message));
+                        m_client.SendMessageTCP(eChatPacket);
+
+                        //m_client.SendMessageUDP(chatPacket);
                     }
                     
 

@@ -5,6 +5,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.IO;
 using Packets;
 
@@ -21,6 +22,16 @@ namespace ServerProject
         private object m_readLock;
         private object m_writeLock;
 
+        private RSACryptoServiceProvider m_RSAprovider;
+        private RSAParameters m_publicKey;
+        private RSAParameters m_privateKey;
+        private RSAParameters m_clientKey;
+
+        public RSAParameters publicKey
+        {
+            get { return m_publicKey; }
+        }
+
         public IPEndPoint EndPoint;
 
         public string clientUsername;
@@ -29,6 +40,10 @@ namespace ServerProject
 
         public ConnectedClients(Socket socket)
         {
+            m_RSAprovider = new RSACryptoServiceProvider(1024);
+            m_publicKey = m_RSAprovider.ExportParameters(false);
+            m_privateKey = m_RSAprovider.ExportParameters(true);
+
             m_writeLock = new object();
             m_readLock = new object();
 
@@ -85,6 +100,50 @@ namespace ServerProject
 
                 m_writer.Flush();
             }
+        }
+
+        private byte[] Encrypt(byte[] data)
+        {
+            lock (m_RSAprovider)
+            {
+                m_RSAprovider.ImportParameters(m_clientKey);
+            }
+
+            return m_RSAprovider.Encrypt(data, true);
+        }
+
+        private byte[] Decrypt(byte[] data)
+        {
+            lock (m_RSAprovider)
+            {
+                m_RSAprovider.ImportParameters(m_privateKey);
+            }
+
+            return m_RSAprovider.Decrypt(data, true);
+        }
+
+        internal byte[] EncryptString(string message)
+        {
+
+            byte[] messageData = Encoding.UTF8.GetBytes(message);
+
+            byte[] encryptedMessage = Encrypt(messageData);
+
+            return encryptedMessage;
+        }
+
+        internal string DecryptString(byte[] message)
+        {
+
+            byte[] decryptedMessage = Decrypt(message);
+            string sDecryptedMessage = Encoding.UTF8.GetString(decryptedMessage);
+
+            return sDecryptedMessage;
+        }
+
+        public void SetClientKey(RSAParameters key)
+        {
+            m_clientKey = key;
         }
     }
 }

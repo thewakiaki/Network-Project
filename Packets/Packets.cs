@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 using System.Net;
 using System.Net.Sockets;
 
@@ -11,9 +12,11 @@ namespace Packets
     public enum PacketType
     {
         ChatMessage,
+        EncryptedChatMessage,
         PrivateMessage,
         ClientName,
-        LoginPacket
+        LoginPacket,
+        Key
     }
 
     [Serializable]
@@ -41,6 +44,18 @@ namespace Packets
     }
 
     [Serializable]
+    public class EncryptedChatMessagePacket : Packet
+    {
+        public byte[] message;
+
+        public EncryptedChatMessagePacket(byte[] messages)
+        {
+            message = messages;
+            packType = PacketType.EncryptedChatMessage;
+        }
+    }
+
+    [Serializable]
     public class ClientNamePacket : Packet
     {
         public string username;
@@ -61,7 +76,7 @@ namespace Packets
         public string message;
         public string targetClient;
         public string sendingClient;
-        
+
         public PrivateMessagePacket(string messages, string target, string sender)
         {
             message = messages;
@@ -75,12 +90,37 @@ namespace Packets
     public class LoginPacket : Packet
     {
         public IPEndPoint EndPoint;
+        private RSAParameters m_key;
 
-        public LoginPacket(IPEndPoint IpEndPoint)
+        public RSAParameters key
         {
-            EndPoint = IpEndPoint;
-            packType = PacketType.LoginPacket;
+            get { return m_key; }
         }
 
+
+        public LoginPacket(IPEndPoint IpEndPoint, RSAParameters key)
+        {
+            EndPoint = IpEndPoint;
+            m_key = key;
+            packType = PacketType.LoginPacket;
+        }
+    }
+
+    [Serializable]
+    public class KeyPacket : Packet
+    {
+        private RSAParameters m_serverKey;
+
+        public RSAParameters serverKey
+        {
+            get { return m_serverKey; }
+        }
+
+        public KeyPacket(RSAParameters key)
+        {
+            m_serverKey = key;
+
+            packType = PacketType.Key;
+        }
     }
 }

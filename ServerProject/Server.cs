@@ -85,11 +85,27 @@ namespace ServerProject
                         }
 
                         break;
+                    case PacketType.EncryptedChatMessage:
+
+                        EncryptedChatMessagePacket eChatPacket = (EncryptedChatMessagePacket)receivedData;
+
+                        string decryptedMessage = m_Clients[index].DecryptString(eChatPacket.message);
+
+                        for(int i = 0; i < m_Clients.Count; ++i)
+                        {
+                            EncryptedChatMessagePacket eChatPackToSend = new EncryptedChatMessagePacket(m_Clients[i].EncryptString(decryptedMessage));
+                            m_Clients[i].SendTCP(eChatPackToSend);
+                        }
+
+
+
+                        break;
                     case PacketType.LoginPacket:
 
                         LoginPacket loginPacket = (LoginPacket)receivedData;
                         m_Clients[index].EndPoint = loginPacket.EndPoint;
-
+                        m_Clients[index].SetClientKey(loginPacket.key);
+                        m_Clients[index].SendTCP(new KeyPacket(m_Clients[index].publicKey));
                         break;
                 }
             }
