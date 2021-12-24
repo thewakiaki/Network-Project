@@ -14,10 +14,19 @@ namespace Packets
         ChatMessage,
         EncryptedChatMessage,
         PrivateMessage,
+        GameChatMessage,
         ClientName,
         NameCheck,
         LoginPacket,
-        Key
+        Key,
+        JoinRPSLobby,
+        JoinPongLobby,
+        PlayingRPS,
+        RPSOption,
+        RPSResult,
+        RPSNextRound,
+        RPSGameEnd,
+        PlayerList
     }
 
     [Serializable]
@@ -53,6 +62,21 @@ namespace Packets
         {
             message = messages;
             packType = PacketType.EncryptedChatMessage;
+        }
+    }
+
+    [Serializable]
+    public class GameChatMessagePacket : Packet
+    {
+        public string messageToSend;
+        public int lobbyNumber;
+
+        public GameChatMessagePacket(string message, int number)
+        {
+            messageToSend = message;
+            lobbyNumber = number;
+
+            packetType = PacketType.GameChatMessage;
         }
     }
 
@@ -136,5 +160,105 @@ namespace Packets
 
             packType = PacketType.Key;
         }
+    }
+
+    [Serializable]
+    public class JoinedRPSLobby : Packet
+    {
+        public bool joinedLobby;
+
+        public JoinedRPSLobby(bool joinStatus)
+        {
+            joinedLobby = joinStatus;
+            packType = PacketType.JoinRPSLobby;
+        }
+    }
+
+    [Serializable]
+    public class PlayingRPSPacket : Packet
+    {
+        public bool playing;
+        public int lobbyNo;
+        public string message;
+
+        public PlayingRPSPacket(bool play, int number)
+        {
+            playing = play;
+            lobbyNo = number;
+            message = "Joined Lobby " + number + ". Game has started";
+            packType = PacketType.PlayingRPS;
+        }
+    }
+
+    [Serializable]
+    public class PlayerListPacket : Packet
+    {
+        public string player1;
+        public string player2;
+
+        public PlayerListPacket(string name1, string name2)
+        {
+            player1 = name1;
+            player2 = name2;
+
+            packType = PacketType.PlayerList;
+        }
+    }
+
+    [Serializable]
+    public class RPSOptionPacket : Packet
+    {
+        public string option;
+
+        public RPSOptionPacket(string choice)
+        {
+            option = choice;
+
+            packType = PacketType.RPSOption;
+        }
+    }
+
+    [Serializable]
+    public class RPSResultPacket : Packet
+    {
+        public string player1;
+        public string player2;
+
+        public RPSResultPacket(string p1, string p2)
+        {
+            player1 = p1;
+            player2 = p2;
+
+            packType = PacketType.RPSResult;
+        }
+    }
+
+    [Serializable]
+    public class RPSGameEndPacket : Packet
+    {
+        public bool gameEnded;
+
+        public RPSGameEndPacket(bool state)
+        {
+            gameEnded = state;
+
+            packType = PacketType.RPSGameEnd;
+        }
+    }
+
+    [Serializable]
+    public class RPSNextRoundPacket : Packet
+    {
+        public int p1Score;
+        public int p2Score;
+
+        public RPSNextRoundPacket(int s1, int s2)
+        {
+            p1Score = s1;
+            p2Score = s2;
+
+            packType = PacketType.RPSNextRound;
+        }
+        
     }
 }

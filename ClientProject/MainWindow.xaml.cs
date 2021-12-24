@@ -78,12 +78,47 @@ namespace ClientProject
                         message = EnterMessage.Text;
                         EnterMessage.Text = "";
 
-                        ChatMessagePacket chatPacket = new ChatMessagePacket(m_client.nickName + ": " + message);
+                        
 
                         //EncryptedChatMessagePacket eChatPacket = new EncryptedChatMessagePacket(m_client.EncryptString(chatPacket.message));
                         //m_client.SendMessageTCP(eChatPacket);
 
-                        m_client.SendMessageTCP(chatPacket);
+                        if (m_client.playingRPS)
+                        {
+                            if (splitMessage[0] == "/e")
+                            {
+                                string gameMessage = "";
+
+                                for (int i = 1; i < splitMessage.Length; ++i)
+                                {
+                                    gameMessage += splitMessage[i] + " ";
+                                }
+
+                                ChatMessagePacket chatPacket = new ChatMessagePacket(m_client.nickName + ": " + gameMessage);
+                                m_client.SendMessageTCP(chatPacket);
+                            }
+                            else
+                            {
+                                string option = message.ToLower();
+
+                                if (option == "rock" || option == "paper" || option == "scissors")
+                                {
+                                    RPSOptionPacket choice = new RPSOptionPacket(option);
+
+                                    m_client.SendMessageTCP(choice);
+                                }
+                                else
+                                {
+                                    GameChatMessagePacket gameChatMessage = new GameChatMessagePacket((m_client.nickName + ": " + message), m_client.RPSLobbyNumber);
+                                    m_client.SendMessageTCP(gameChatMessage);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            ChatMessagePacket chatPacket = new ChatMessagePacket(m_client.nickName + ": " + message);
+                            m_client.SendMessageTCP(chatPacket);
+                        }
                     }
                     
 
@@ -176,6 +211,176 @@ namespace ClientProject
             Login.Dispatcher.Invoke(() =>
             {
                 MessageBox.Show(message, "Warning");
+            });
+        }
+
+        private void PlayPong_Click(object sender, RoutedEventArgs e)
+        {
+            ChooseGame.Visibility = Visibility.Hidden;
+            WaitingInLobby.Visibility = Visibility.Visible;
+        }
+
+        private void PlayRPS_Click(object sender, RoutedEventArgs e)
+        {
+            ChooseGame.Visibility = Visibility.Hidden;
+            WaitingInLobby.Visibility = Visibility.Visible;
+
+            JoinedRPSLobby joinedLobbyPacket = new JoinedRPSLobby(true);
+
+            m_client.SendMessageTCP(joinedLobbyPacket);
+        }
+
+        public void PlayingRockPaperScissors()
+        {
+            WaitingInLobby.Dispatcher.Invoke(() =>
+            {
+                WaitingInLobby.Visibility = Visibility.Hidden;
+                RockPaperScissors.Visibility = Visibility.Visible;
+            });
+        }
+
+        public void SetRPSNames(string player1, string player2)
+        {
+            RockPaperScissors.Dispatcher.Invoke(() =>
+            {
+                Player1.Text = player1;
+                Player2.Text = player2;
+            });
+        }
+
+        public void SetScores(int s1, int s2)
+        {
+            RockPaperScissors.Dispatcher.Invoke(() =>
+            {
+                P1Score.Text = s1.ToString();
+                P2Score.Text = s2.ToString();
+            });
+        }
+
+        private void BackToMenu1_Click(object sender, RoutedEventArgs e)
+        {
+            RockPaperScissors.Visibility = Visibility.Hidden;
+            ChooseGame.Visibility = Visibility.Visible;
+
+            P1Score.Text = "0";
+            P2Score.Text = "0";
+
+            BackToMenu1.Visibility = Visibility.Hidden;
+        }
+
+        public void ShowBackToMenu()
+        {
+
+            RockPaperScissors.Dispatcher.Invoke(() =>
+            {
+                BackToMenu1.Visibility = Visibility.Visible;
+            });
+        }
+
+        public void ShowRockP1(bool show)
+        {
+            
+            RockPaperScissors.Dispatcher.Invoke(() =>
+            {
+                if (show)
+                {
+                    P1Rock.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    P1Rock.Visibility = Visibility.Hidden;
+                }
+            });
+            
+
+        }
+
+        public void ShowPaperP1(bool show)
+        {
+            RockPaperScissors.Dispatcher.Invoke(() =>
+            {
+                if (show)
+                {
+                    P1Paper.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    P1Paper.Visibility = Visibility.Hidden;
+                }
+            });
+        }
+
+        public void ShowScissorsP1(bool show)
+        {
+            RockPaperScissors.Dispatcher.Invoke(() =>
+            {
+                if (show)
+                {
+                    P1Scissors.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    P1Scissors.Visibility = Visibility.Hidden;
+                }
+            });
+        }
+
+        public void ShowRockP2(bool show)
+        {
+            RockPaperScissors.Dispatcher.Invoke(() =>
+            {
+                if (show)
+                {
+                    P2Rock.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    P2Rock.Visibility = Visibility.Hidden;
+                }
+            });
+        }
+
+        public void ShowPaperP2(bool show)
+        {
+            RockPaperScissors.Dispatcher.Invoke(() =>
+            {
+                if (show)
+                {
+                    P2Paper.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    P2Paper.Visibility = Visibility.Hidden;
+                }
+            });
+        }
+
+        public void ShowScissorsP2(bool show)
+        {
+            RockPaperScissors.Dispatcher.Invoke(() =>
+            {
+                if (show)
+                {
+                    P2Scissors.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    P2Scissors.Visibility = Visibility.Hidden;
+                }
+            });
+        }
+
+        public void NewRound()
+        {
+            RockPaperScissors.Dispatcher.Invoke(() =>
+            {
+                P1Rock.Visibility = Visibility.Hidden;
+                P1Paper.Visibility = Visibility.Hidden;
+                P1Scissors.Visibility = Visibility.Hidden;
+
+                P2Rock.Visibility = Visibility.Hidden;
+                P2Paper.Visibility = Visibility.Hidden;
+                P2Scissors.Visibility = Visibility.Hidden;
             });
         }
     }

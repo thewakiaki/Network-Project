@@ -18,6 +18,10 @@ namespace ServerProject
         private UdpClient m_udpListener;
         private ConcurrentDictionary<int, ConnectedClients> m_Clients;
 
+        private ConcurrentDictionary<int, ConnectedClients[]> m_RPSLobbies;
+        private int m_NumberOfLobbies;
+        private List<ConnectedClients> m_ClientForRPS;
+
         public Server(string ipAddress, int port)
         {
             IPAddress ip = IPAddress.Parse(ipAddress);
@@ -28,6 +32,8 @@ namespace ServerProject
             udpThread.Start();
 
             Start();
+
+            
         }
 
         private void ClientMethodTCP(int index)
@@ -52,7 +58,7 @@ namespace ServerProject
 
                         if (m_Clients.Count <= 1)
                         {
-                            m_Clients[index].SendTCP(new ChatMessagePacket(GetReturnMessage("No Other Users On The Server")));
+                            m_Clients[index].SendTCP(new ChatMessagePacket("No Other Users On The Server"));
                         }
                         else
                         {
@@ -61,7 +67,6 @@ namespace ServerProject
                                 if (privateChatPacket.targetClient == m_Clients[i].clientUsername || privateChatPacket.targetClient == m_Clients[i].clientNickName)
                                 {
                                     targetUserIndex = i;
-                                    //m_Clients[i].SendTCP(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
                                 }
                                 else
                                 {
@@ -72,12 +77,12 @@ namespace ServerProject
 
                             if (targetUserIndex == 0)
                             {
-                                m_Clients[index].SendTCP(new ChatMessagePacket(GetReturnMessage("User Does Not Exist On The Server")));
+                                m_Clients[index].SendTCP(new ChatMessagePacket("User Does Not Exist On The Server"));
                             }
                             else
                             {
-                                m_Clients[index].SendTCP(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
-                                m_Clients[targetUserIndex].SendTCP(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
+                                m_Clients[index].SendTCP(new ChatMessagePacket(privateChatPacket.message));
+                                m_Clients[targetUserIndex].SendTCP(new ChatMessagePacket(privateChatPacket.message));
                             }
                         }                        
 
@@ -142,7 +147,7 @@ namespace ServerProject
 
                         for (int i = 0; i < m_Clients.Count; ++i)
                         {
-                            m_Clients[i].SendTCP(new ChatMessagePacket(GetReturnMessage(chatPacket.message)));
+                            m_Clients[i].SendTCP(new ChatMessagePacket(chatPacket.message));
                         }
 
                         break;
@@ -158,7 +163,16 @@ namespace ServerProject
                             m_Clients[i].SendTCP(eChatPackToSend);
                         }
 
+                        break;
 
+                    case PacketType.GameChatMessage:
+
+                        GameChatMessagePacket gameChatMessage = (GameChatMessagePacket)receivedData;
+
+                        ChatMessagePacket message = new ChatMessagePacket(gameChatMessage.messageToSend);
+
+                        m_RPSLobbies[gameChatMessage.lobbyNumber][0].SendTCP(message);
+                        m_RPSLobbies[gameChatMessage.lobbyNumber][1].SendTCP(message);
 
                         break;
                     case PacketType.LoginPacket:
@@ -167,6 +181,37 @@ namespace ServerProject
                         m_Clients[index].EndPoint = loginPacket.EndPoint;
                         m_Clients[index].SetClientKey(loginPacket.key);
                         m_Clients[index].SendTCP(new KeyPacket(m_Clients[index].publicKey));
+                        break;
+
+                    case PacketType.JoinRPSLobby:
+
+                        if(m_ClientForRPS.Count < 2)
+                        {
+                            m_ClientForRPS.Add(m_Clients[index]);
+                        }
+
+                        if(m_ClientForRPS.Count == 2)
+                        {
+                            ConnectedClients[] playersToAdd = new ConnectedClients[2];
+
+                            playersToAdd[0] = m_ClientForRPS[0];
+                            playersToAdd[1] = m_ClientForRPS[1];
+
+                            m_RPSLobbies.TryAdd(m_NumberOfLobbies, playersToAdd);
+                            m_ClientForRPS.Clear();
+
+                            Thread RPSThread = new Thread(() => RockPaperScissors(playersToAdd[0], playersToAdd[1]));
+                            RPSThread.Start();
+                        }
+                        
+                        break;
+
+                    case PacketType.RPSOption:
+
+                        RPSOptionPacket choice = (RPSOptionPacket)receivedData;
+
+                        m_Clients[index].choice = choice.option;
+
                         break;
                 }
             }
@@ -177,21 +222,18 @@ namespace ServerProject
 
         }
 
-        private string GetReturnMessage(string code)
-        {
-            return code;
-        }
-
         public void Start()
         {
             m_Clients = new ConcurrentDictionary<int, ConnectedClients>();
-            
+
+            m_RPSLobbies = new ConcurrentDictionary<int, ConnectedClients[]>();
+            m_ClientForRPS = new List<ConnectedClients>();
 
             int clientIndex = 0;
 
             m_tcpListener.Start();
 
-            while (clientIndex <= 3)
+            while (clientIndex <= 4)
             {
 
                 Console.WriteLine("Listening...");
@@ -242,6 +284,164 @@ namespace ServerProject
             {
                 Console.WriteLine("Client UDP Read Method exception: " + e.Message);
             }
+        }
+
+        private void RockPaperScissors(ConnectedClients player1, ConnectedClients player2)
+        {
+            player1.isPlayingRPS = true;
+            player2.isPlayingRPS = true;
+
+            ConnectedClients[] players = new ConnectedClients[2];
+
+            
+            PlayingRPSPacket playingRPS = new PlayingRPSPacket(true, m_NumberOfLobbies);
+
+            player1.SendTCP(new PlayerListPacket(player1.clientNickName, player2.clientNickName));
+            player2.SendTCP(new PlayerListPacket(player1.clientNickName, player2.clientNickName));
+
+            player1.SendTCP(playingRPS);
+            player2.SendTCP(playingRPS);
+
+            int lobbyNumber = m_NumberOfLobbies;
+
+            m_NumberOfLobbies++;
+
+            ChatMessagePacket player1Opponent = new ChatMessagePacket(player2.clientNickName + " has joined your game");
+            ChatMessagePacket player2Opponent = new ChatMessagePacket(player1.clientNickName + " has joined your game");
+
+            player1.SendTCP(player1Opponent);
+            player2.SendTCP(player2Opponent);
+
+            bool playing = true;
+            
+            while(playing)
+            {
+                if(player1.choice != "" && player2.choice != "")
+                {
+                    Thread.Sleep(1000);
+
+                    player1.SendTCP(new RPSResultPacket(player1.choice, player2.choice));
+                    player2.SendTCP(new RPSResultPacket(player1.choice, player2.choice));
+
+                    switch(player1.choice)
+                    {
+                        case "rock":
+
+                            if(player2.choice == "rock")
+                            {
+                                player1.SendTCP(new ChatMessagePacket("It's a draw"));
+                                player2.SendTCP(new ChatMessagePacket("It's a draw"));
+                            }
+                            else if(player2.choice == "paper")
+                            {
+                                player1.SendTCP(new ChatMessagePacket(player2.clientNickName + " won this round"));
+                                player2.SendTCP(new ChatMessagePacket(player2.clientNickName + " won this round"));
+
+                                player2.RPSScore++;
+                            }
+                            else
+                            {
+                                player1.SendTCP(new ChatMessagePacket(player1.clientNickName + " won this round"));
+                                player2.SendTCP(new ChatMessagePacket(player1.clientNickName + " won this round"));
+
+                                player1.RPSScore++;
+                            }
+
+                            break;
+
+                        case "paper":
+
+                            if (player2.choice == "rock")
+                            {
+                                player1.SendTCP(new ChatMessagePacket(player1.clientNickName + " won this round"));
+                                player2.SendTCP(new ChatMessagePacket(player1.clientNickName + " won this round"));
+
+                                player1.RPSScore++;
+                            }
+                            else if (player2.choice == "paper")
+                            {
+                                player1.SendTCP(new ChatMessagePacket("It's a draw"));
+                                player2.SendTCP(new ChatMessagePacket("It's a draw"));
+                              
+                            }
+                            else
+                            {
+                                player1.SendTCP(new ChatMessagePacket(player2.clientNickName + " won this round"));
+                                player2.SendTCP(new ChatMessagePacket(player2.clientNickName + " won this round"));
+
+                                player2.RPSScore++;
+                            }
+                            break;
+
+                        case "scissors":
+
+                            if (player2.choice == "rock")
+                            {
+                                player1.SendTCP(new ChatMessagePacket(player2.clientNickName + " won this round"));
+                                player2.SendTCP(new ChatMessagePacket(player2.clientNickName + " won this round"));
+
+                                player2.RPSScore++;
+                            }
+                            else if (player2.choice == "paper")
+                            {
+                                player1.SendTCP(new ChatMessagePacket(player1.clientNickName + " won this round"));
+                                player2.SendTCP(new ChatMessagePacket(player1.clientNickName + " won this round"));
+
+                                player1.RPSScore++;
+                            }
+                            else
+                            {
+                                player1.SendTCP(new ChatMessagePacket("It's a draw"));
+                                player2.SendTCP(new ChatMessagePacket("It's a draw"));
+                            }
+
+                            break;
+                    }
+
+                    if(player1.RPSScore == 3 || player2.RPSScore == 3)
+                    {
+                        playing = false;
+                    }
+
+                    player1.choice = "";
+                    player2.choice = "";
+
+                    Thread.Sleep(3000);
+
+                    player1.SendTCP(new RPSNextRoundPacket(player1.RPSScore, player2.RPSScore));
+                    player2.SendTCP(new RPSNextRoundPacket(player1.RPSScore, player2.RPSScore));
+
+                }
+            }
+
+            if(player1.RPSScore == 3)
+            {
+                player1.SendTCP(new ChatMessagePacket(player1.clientNickName + " Has won"));
+                player2.SendTCP(new ChatMessagePacket(player1.clientNickName + " Has won"));
+
+                player1.SendTCP(new RPSGameEndPacket(true));
+                player2.SendTCP(new RPSGameEndPacket(true));
+
+                player1.RPSScore = 0;
+                player2.RPSScore = 0;
+            }
+            else
+            {
+                player1.SendTCP(new ChatMessagePacket(player2.clientNickName + " Has won"));
+                player2.SendTCP(new ChatMessagePacket(player2.clientNickName + " Has won"));
+
+                player1.SendTCP(new RPSGameEndPacket(true));
+                player2.SendTCP(new RPSGameEndPacket(true));
+
+                player1.RPSScore = 0;
+                player2.RPSScore = 0;
+            }
+
+            ConnectedClients[] lobbyPlayers = new ConnectedClients[2];
+
+            m_RPSLobbies.TryRemove(lobbyNumber, out lobbyPlayers);
+
+            lobbyPlayers = null;
         }
     }
 }

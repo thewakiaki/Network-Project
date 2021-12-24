@@ -37,6 +37,11 @@ namespace ServerProject
         public string clientUsername;
         public string clientNickName;
 
+        public bool isPlayingRPS;
+
+        public string choice;
+        public int RPSScore;
+
 
         public ConnectedClients(Socket socket)
         {
@@ -55,6 +60,10 @@ namespace ServerProject
             m_writer = new BinaryWriter(m_networkStream, Encoding.UTF8);
 
             m_formatter = new BinaryFormatter();
+
+            isPlayingRPS = false;
+            choice = "";
+            RPSScore = 0;
         }
 
         public void Close()

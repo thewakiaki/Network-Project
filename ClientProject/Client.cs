@@ -31,6 +31,10 @@ namespace ClientProject
         public string userName;
         public string nickName;
 
+        public int RPSLobbyNumber;
+
+        public bool playingRPS;
+
         public Client()
         {
             m_tcpClient = new TcpClient();
@@ -116,7 +120,7 @@ namespace ClientProject
                             m_serverKey = loginInfo.key;
                             break;
                         case PacketType.NameCheck:
-
+                            
                             NameCheckPacket nameCheck = (NameCheckPacket)dataPacket;
 
                             switch (nameCheck.type)
@@ -133,6 +137,94 @@ namespace ClientProject
                                     m_form.DisplayErrorMessage("Nickname already exists! Choose another nickname!");
                                     break;
                             }
+                            break;
+
+                        case PacketType.PlayingRPS:
+
+                            PlayingRPSPacket playRPS = (PlayingRPSPacket)dataPacket;
+
+                            if(playRPS.playing)
+                            {
+                                playingRPS = true;
+                                m_form.PlayingRockPaperScissors();
+                                m_form.UpdateChatDisplay(playRPS.message);
+                                RPSLobbyNumber = playRPS.lobbyNo;
+                            }
+                            break;
+
+                        case PacketType.RPSResult:
+
+                            RPSResultPacket result = (RPSResultPacket)dataPacket;
+
+                            switch(result.player1)
+                            {
+                                case "rock":
+                                    m_form.ShowRockP1(true);
+                                    m_form.ShowPaperP1(false);
+                                    m_form.ShowScissorsP1(false);
+                                    break;
+                                case "paper":
+                                    m_form.ShowRockP1(false);
+                                    m_form.ShowPaperP1(true);
+                                    m_form.ShowScissorsP1(false);
+                                    break;
+                                case "scissors":
+                                    m_form.ShowRockP1(false);
+                                    m_form.ShowPaperP1(false);
+                                    m_form.ShowScissorsP1(true);
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            switch (result.player2)
+                            {
+                                case "rock":
+                                    m_form.ShowRockP2(true);
+                                    m_form.ShowPaperP2(false);
+                                    m_form.ShowScissorsP2(false);
+                                    break;
+                                case "paper":
+                                    m_form.ShowRockP2(false);
+                                    m_form.ShowPaperP2(true);
+                                    m_form.ShowScissorsP2(false);
+                                    break;
+                                case "scissors":
+                                    m_form.ShowRockP2(false);
+                                    m_form.ShowPaperP2(false);
+                                    m_form.ShowScissorsP2(true);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+
+                        case PacketType.RPSNextRound:
+
+                            RPSNextRoundPacket nextRoundPacket = (RPSNextRoundPacket)dataPacket;
+
+                            m_form.NewRound();
+
+                            m_form.SetScores(nextRoundPacket.p1Score, nextRoundPacket.p2Score);                            
+                            break;
+
+                        case PacketType.RPSGameEnd:
+
+                            RPSGameEndPacket gameEndPacket = (RPSGameEndPacket)dataPacket;
+
+                            if(gameEndPacket.gameEnded)
+                            {
+                                playingRPS = false;
+
+                                m_form.ShowBackToMenu();
+                            }
+                            
+                            break;
+
+                        case PacketType.PlayerList:
+                            PlayerListPacket players = (PlayerListPacket)dataPacket;
+
+                            m_form.SetRPSNames(players.player1, players.player2);
                             break;
                     }
                 }

@@ -48,7 +48,7 @@
                 </Grid.RowDefinitions>
 
 
-                <Image Grid.Column="0" Grid.Row="3" Source="/Default Profile.png" Margin="5, 5 , 200, 5"/>
+                <Image Grid.Column="0" Grid.Row="3" Source="/Images/Default Profile.png" Margin="5, 5 , 200, 5"/>
 
                 <TextBlock Grid.Column="0" Grid.Row="3" Foreground="White" Text="Username: " Margin="100, 10, 130, 55" FontSize="15"/>
                 <TextBlock Grid.Column="0" Grid.Row="3" Foreground="White" Text="Nickname: " Margin="100, 50, 130, 15" FontSize="15"/>
@@ -77,9 +77,86 @@
                 <TextBox Grid.Column="1" Grid.Row="3" TextChanged="Input_Message_Box" Margin="10, 20, 225, 20" Name="EnterMessage" Text="" FontSize="16"/>
                 <Button Grid.Column="1" Grid.Row="3" Margin = "550, 10, 10, 10" Content="Send message" MaxHeight="50" Click="Send_Message_Button" FontSize="20" Name="SendButton"/>
 
-                <StackPanel Grid.Row="1" Grid.Column="1" Width="750" Height="530" Name="ChooseGame" Visibility="Visible">
-                    <Rectangle Width="700" Height="480" Margin="10, 30, 10, 10" Fill="White"/>
+
+                <StackPanel Grid.Row="1" Grid.Column="1" Name="ChooseGame" Visibility="Visible">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="375"/>
+                            <ColumnDefinition Width="375"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="530"/>
+                        </Grid.RowDefinitions>
+
+                        <Rectangle Grid.Column="0" Fill="white"/>
+                        <Rectangle Grid.Column="0" Width="15" Fill="Black" HorizontalAlignment="Right"/>
+                        <Rectangle Grid.Column="1" Fill="White"/>
+                        <Rectangle Grid.Column="1" Width="15" Fill="Black" HorizontalAlignment="Left"/>
+
+                        <TextBlock Grid.Column="0" Margin="10, 100, 25, 375" Text="Rock Paper Scissors" FontSize="37" TextAlignment="Center" FontWeight="ExtraBold"/>
+                        <Button Grid.Column="0" Margin="50, 250, 50, 200" Content="Play" FontSize="50" Name="PlayRPS" ButtonBase.Click="PlayRPS_Click"/>
+
+                        <TextBlock Grid.Column="1" Margin="10, 100, 10, 375" Text="Pong" FontSize="37" TextAlignment="Center" FontWeight="ExtraBold"/>
+                        <Button Grid.Column="1" Margin="50, 250, 50, 200" Content="Play" FontSize="50" Name="PlayPong" ButtonBase.Click="PlayPong_Click"/>
+
+
+                        <TextBlock Width="300" Height="100" Margin="50, 10, 500, 10"/>
+                    </Grid>
                 </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="1" Name="WaitingInLobby" Visibility="Hidden">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="750"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="530"/>
+                        </Grid.RowDefinitions>
+
+                        <Rectangle Grid.Column="0" Fill="white"/>
+
+                        <TextBlock HorizontalAlignment="Center" Width="600" Height="80" Text="Waiting for Player to join" TextAlignment="Center" FontSize="50" FontWeight="ExtraBold"/>
+
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="1" Name="RockPaperScissors" Visibility="Hidden">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="375"/>
+                            <ColumnDefinition Width="375"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="530"/>
+                        </Grid.RowDefinitions>
+
+
+                        <Rectangle Grid.Column="0" Fill="White"/>
+                        <Rectangle Grid.Column="1" Fill="White"/>
+
+                        <Rectangle Grid.Column="0" HorizontalAlignment="Right" Width="2" Fill="Black"/>
+                        <Rectangle Grid.Column="1" HorizontalAlignment="Left" Width="2" Fill="Black"/>
+
+                        <TextBlock Grid.Column="0" Margin="10, 10, 10, 450" Text="Player 1" TextAlignment="Center" VerticalAlignment="Center" FontSize="30" FontWeight="Bold" Name="Player1"/>
+                        <TextBlock Grid.Column="0" Margin="100,75, 100, 400" Text="0" HorizontalAlignment="Center" FontSize="40" FontWeight="Bold" Name="P1Score"/>
+                        <TextBlock Grid.Column="1" Margin="10, 10, 10, 450" Text="Player 2" TextAlignment="Center" VerticalAlignment="Center" FontSize="30" FontWeight="Bold" Name="Player2"/>
+                        <TextBlock Grid.Column="1" Margin="100,75, 100, 400" Text="0" HorizontalAlignment="Center" FontSize="40" FontWeight="Bold" Name="P2Score"/>
+
+                        <Image Grid.Column="0" Margin="10, 150, 10, 150" Source="/Images/Rock.png" Visibility="Hidden" Name="P1Rock"/>
+                        <Image Grid.Column="0" Margin="10, 150, 10, 150" Source="/Images/Paper.png" Visibility="Hidden" Name="P1Paper"/>
+                        <Image Grid.Column="0" Margin="10, 150, 10, 150" Source="/Images/Scissors.png" Visibility="Hidden" Name="P1Scissors"/>
+
+                        <Image Grid.Column="1" Margin="10, 150, 10, 150" Source="/Images/Rock.png" Visibility="Hidden" Name="P2Rock"/>
+                        <Image Grid.Column="1" Margin="10, 150, 10, 150" Source="/Images/Paper.png" Visibility="Hidden" Name="P2Paper"/>
+                        <Image Grid.Column="1" Margin="10, 150, 10, 150" Source="/Images/Scissors.png" Visibility="Hidden" Name="P2Scissors"/>
+
+                        <Button Grid.Column="0" Grid.ColumnSpan="2" Margin="150, 430 , 150, 30" Content="Back To Game Options" FontSize="40" FontWeight="Bold" Name="BackToMenu1" Click="BackToMenu1_Click" Visibility="Hidden"/>
+                    </Grid>
+
+                    
+                </StackPanel>
+
+
             </Grid>
         </StackPanel>
 
