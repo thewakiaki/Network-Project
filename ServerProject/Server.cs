@@ -48,29 +48,90 @@ namespace ServerProject
 
                         PrivateMessagePacket privateChatPacket = (PrivateMessagePacket)receivedData;
 
-                        for (int i = 0; i < m_Clients.Count; ++i)
+                        int targetUserIndex = 0;
+
+                        if (m_Clients.Count <= 1)
                         {
-                            if (privateChatPacket.targetClient == m_Clients[i].clientUsername || privateChatPacket.targetClient == m_Clients[i].clientNickName)
+                            m_Clients[index].SendTCP(new ChatMessagePacket(GetReturnMessage("No Other Users On The Server")));
+                        }
+                        else
+                        {
+                            for (int i = 0; i < m_Clients.Count; ++i)
                             {
-                                m_Clients[i].SendTCP(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
+                                if (privateChatPacket.targetClient == m_Clients[i].clientUsername || privateChatPacket.targetClient == m_Clients[i].clientNickName)
+                                {
+                                    targetUserIndex = i;
+                                    //m_Clients[i].SendTCP(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
+                                }
+                                else
+                                {
+                                    targetUserIndex = 0;
+                                    continue;
+                                }
                             }
-                            else if (privateChatPacket.sendingClient == m_Clients[i].clientUsername || privateChatPacket.sendingClient == m_Clients[i].clientNickName)
+
+                            if (targetUserIndex == 0)
                             {
-                                m_Clients[i].SendTCP(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
+                                m_Clients[index].SendTCP(new ChatMessagePacket(GetReturnMessage("User Does Not Exist On The Server")));
                             }
                             else
                             {
-                                continue;
+                                m_Clients[index].SendTCP(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
+                                m_Clients[targetUserIndex].SendTCP(new ChatMessagePacket(GetReturnMessage(privateChatPacket.message)));
                             }
-                        }
+                        }                        
 
                         break;
 
                     case PacketType.ClientName:
 
                         ClientNamePacket namePacket = (ClientNamePacket)receivedData;
-                        client.clientUsername = namePacket.username;
-                        client.clientNickName = namePacket.nickname;
+
+                        int nameCheck = 0;
+
+                       
+                        for (int i = 0; i < m_Clients.Count; ++i)
+                        {
+                            if (namePacket.username == m_Clients[i].clientUsername)
+                            {
+                                nameCheck = 1;
+                                break;
+                            }
+                            else if(namePacket.nickname == m_Clients[i].clientNickName)
+                            {
+                                nameCheck = 2;
+                                break;
+                            }
+                            else
+                            {
+                                nameCheck = 0;
+                            }
+                        }
+                     
+
+                        switch(nameCheck)
+                        {
+                            case 0:
+                                client.clientUsername = namePacket.username;
+                                client.clientNickName = namePacket.nickname;
+
+                                NameCheckPacket checkedName = new NameCheckPacket(0);
+                                client.SendTCP(checkedName);
+                                break;
+
+                            case 1:
+                                NameCheckPacket badUsername = new NameCheckPacket(1);
+                                client.SendTCP(badUsername);
+                                break;
+
+                            case 2:
+                                NameCheckPacket badNickname = new NameCheckPacket(2);
+                                client.SendTCP(badNickname);
+                                break;
+                        }
+                        
+
+                        
 
                         break;
 

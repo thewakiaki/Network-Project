@@ -115,6 +115,25 @@ namespace ClientProject
                             LoginPacket loginInfo = (LoginPacket)dataPacket;
                             m_serverKey = loginInfo.key;
                             break;
+                        case PacketType.NameCheck:
+
+                            NameCheckPacket nameCheck = (NameCheckPacket)dataPacket;
+
+                            switch (nameCheck.type)
+                            {
+                                case 0:
+                                    m_form.ChangeScreen();
+                                    break;
+
+                                case 1:
+                                    m_form.DisplayErrorMessage("Username already exists! Choose another username!");
+                                    break;
+
+                                case 2:
+                                    m_form.DisplayErrorMessage("Nickname already exists! Choose another nickname!");
+                                    break;
+                            }
+                            break;
                     }
                 }
 

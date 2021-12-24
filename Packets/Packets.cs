@@ -15,6 +15,7 @@ namespace Packets
         EncryptedChatMessage,
         PrivateMessage,
         ClientName,
+        NameCheck,
         LoginPacket,
         Key
     }
@@ -67,6 +68,19 @@ namespace Packets
             nickname = nick;
 
             packType = PacketType.ClientName;
+        }
+    }
+
+    [Serializable]
+    public class NameCheckPacket : Packet
+    {
+
+        public int type;
+
+        public NameCheckPacket(int check)
+        {
+            type = check;
+            packetType = PacketType.NameCheck;
         }
     }
 

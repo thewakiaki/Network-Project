@@ -83,7 +83,7 @@ namespace ClientProject
                         //EncryptedChatMessagePacket eChatPacket = new EncryptedChatMessagePacket(m_client.EncryptString(chatPacket.message));
                         //m_client.SendMessageTCP(eChatPacket);
 
-                        m_client.SendMessageUDP(chatPacket);
+                        m_client.SendMessageTCP(chatPacket);
                     }
                     
 
@@ -157,12 +157,26 @@ namespace ClientProject
 
                     ClientNamePacket clientName = new ClientNamePacket(m_client.userName, m_client.nickName);
                     m_client.SendMessageTCP(clientName);
-
-                    Login.Visibility = Visibility.Hidden;
-                    ChatDisplayPanel.Visibility = Visibility.Visible;
                 }
             }           
             
+        }
+
+        public void ChangeScreen()
+        {
+            Login.Dispatcher.Invoke(() =>
+            {
+                Login.Visibility = Visibility.Hidden;
+                ChatDisplayPanel.Visibility = Visibility.Visible;
+            });
+        }
+
+        public void DisplayErrorMessage(string message)
+        {
+            Login.Dispatcher.Invoke(() =>
+            {
+                MessageBox.Show(message, "Warning");
+            });
         }
     }
 }
