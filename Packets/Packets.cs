@@ -20,12 +20,13 @@ namespace Packets
         LoginPacket,
         Key,
         JoinRPSLobby,
-        JoinPongLobby,
         PlayingRPS,
         RPSOption,
         RPSResult,
         RPSNextRound,
         RPSGameEnd,
+        JoinedPongLobby,
+        PlayingPong,
         PlayerList
     }
 
@@ -163,14 +164,26 @@ namespace Packets
     }
 
     [Serializable]
-    public class JoinedRPSLobby : Packet
+    public class JoinedRPSLobbyPacket : Packet
     {
         public bool joinedLobby;
 
-        public JoinedRPSLobby(bool joinStatus)
+        public JoinedRPSLobbyPacket(bool joinStatus)
         {
             joinedLobby = joinStatus;
             packType = PacketType.JoinRPSLobby;
+        }
+    }
+
+    [Serializable]
+    public class JoinedPongLobbyPacket : Packet
+    {
+        public bool joinedLobby;
+
+        public JoinedPongLobbyPacket(bool joinStatus)
+        {
+            joinedLobby = joinStatus;
+            packType = PacketType.JoinedPongLobby;
         }
     }
 
@@ -189,6 +202,24 @@ namespace Packets
             packType = PacketType.PlayingRPS;
         }
     }
+
+    [Serializable]
+
+    public class PlayingPongPacket : Packet
+    {
+        public bool playing;
+        public int lobbyNo;
+        public string message;
+
+        public PlayingPongPacket(bool play, int number)
+        {
+            playing = play;
+            lobbyNo = number;
+            message = "Joined Lobby " + number + ". Game has started";
+            packType = PacketType.PlayingPong;
+        }
+    }
+
 
     [Serializable]
     public class PlayerListPacket : Packet
@@ -259,6 +290,7 @@ namespace Packets
 
             packType = PacketType.RPSNextRound;
         }
-        
     }
+
+
 }

@@ -156,6 +156,21 @@
                     
                 </StackPanel>
 
+                <StackPanel Grid.Column="1" Grid.Row="1" Name="Pong" Visibility="Hidden">
+                    <Canvas Width="750" Height="530" x:Name="PongCanvas">
+                        <Rectangle Panel.ZIndex="0" Fill="Black" Width="750" Height="530" x:Name="Background"/>
+                        <Rectangle Panel.ZIndex="0" Fill="DarkGray" Width="10" Height="530" Canvas.Left="370"/>
+
+                        <TextBlock Panel.ZIndex="1" Foreground="White" x:Name="Player1PongScore" Width="70" Height="80" Text="00" Canvas.Left="140" FontSize="60"/>
+                        <TextBlock Panel.ZIndex="1" Foreground="White" x:Name="Player2PongScore" Width="70" Height="80" Text="00" Canvas.Right="140" FontSize="60"/>
+
+                        <Rectangle Panel.ZIndex="1" Fill="White" x:Name="Player1Racket" Width="15" Height="80" Canvas.Left="20" Canvas.Bottom="225"/>
+                        <Rectangle Panel.ZIndex="1" Fill="White" x:Name="Player2Racket" Width="15" Height="80" Canvas.Right="20" Canvas.Bottom="225"/>
+
+                        <Rectangle Panel.ZIndex="1" Fill="ForestGreen" x:Name="Puck" Width="20" Height="20" Canvas.Left="365" Canvas.Top="255"/>
+                    </Canvas>
+                </StackPanel>
+
 
             </Grid>
         </StackPanel>

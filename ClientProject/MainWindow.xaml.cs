@@ -83,7 +83,7 @@ namespace ClientProject
                         //EncryptedChatMessagePacket eChatPacket = new EncryptedChatMessagePacket(m_client.EncryptString(chatPacket.message));
                         //m_client.SendMessageTCP(eChatPacket);
 
-                        if (m_client.playingRPS)
+                        if (m_client.playingRPS || m_client.playingPong)
                         {
                             if (splitMessage[0] == "/e")
                             {
@@ -218,6 +218,10 @@ namespace ClientProject
         {
             ChooseGame.Visibility = Visibility.Hidden;
             WaitingInLobby.Visibility = Visibility.Visible;
+
+            JoinedPongLobbyPacket joinedLobbyPacket = new JoinedPongLobbyPacket(true);
+
+            m_client.SendMessageTCP(joinedLobbyPacket);
         }
 
         private void PlayRPS_Click(object sender, RoutedEventArgs e)
@@ -225,7 +229,7 @@ namespace ClientProject
             ChooseGame.Visibility = Visibility.Hidden;
             WaitingInLobby.Visibility = Visibility.Visible;
 
-            JoinedRPSLobby joinedLobbyPacket = new JoinedRPSLobby(true);
+            JoinedRPSLobbyPacket joinedLobbyPacket = new JoinedRPSLobbyPacket(true);
 
             m_client.SendMessageTCP(joinedLobbyPacket);
         }
@@ -236,6 +240,15 @@ namespace ClientProject
             {
                 WaitingInLobby.Visibility = Visibility.Hidden;
                 RockPaperScissors.Visibility = Visibility.Visible;
+            });
+        }
+
+        public void PlayingPongGame()
+        {
+            WaitingInLobby.Dispatcher.Invoke(() =>
+            {
+                WaitingInLobby.Visibility = Visibility.Hidden;
+                Pong.Visibility = Visibility.Visible;
             });
         }
 
@@ -276,6 +289,8 @@ namespace ClientProject
                 BackToMenu1.Visibility = Visibility.Visible;
             });
         }
+
+        #region Show Rock Paper Scissor Results
 
         public void ShowRockP1(bool show)
         {
@@ -369,6 +384,8 @@ namespace ClientProject
                 }
             });
         }
+
+        #endregion
 
         public void NewRound()
         {

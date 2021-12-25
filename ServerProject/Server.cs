@@ -22,6 +22,9 @@ namespace ServerProject
         private int m_NumberOfLobbies;
         private List<ConnectedClients> m_ClientForRPS;
 
+        private ConcurrentDictionary<int, ConnectedClients[]> m_PongLobbies;
+        private List<ConnectedClients> m_ClientForPong;
+
         public Server(string ipAddress, int port)
         {
             IPAddress ip = IPAddress.Parse(ipAddress);
@@ -171,8 +174,16 @@ namespace ServerProject
 
                         ChatMessagePacket message = new ChatMessagePacket(gameChatMessage.messageToSend);
 
-                        m_RPSLobbies[gameChatMessage.lobbyNumber][0].SendTCP(message);
-                        m_RPSLobbies[gameChatMessage.lobbyNumber][1].SendTCP(message);
+                        if (m_Clients[index].isPlayingRPS)
+                        {
+                            m_RPSLobbies[gameChatMessage.lobbyNumber][0].SendTCP(message);
+                            m_RPSLobbies[gameChatMessage.lobbyNumber][1].SendTCP(message);
+                        }
+                        else
+                        {
+                            m_PongLobbies[gameChatMessage.lobbyNumber][0].SendTCP(message);
+                            m_PongLobbies[gameChatMessage.lobbyNumber][1].SendTCP(message);
+                        }
 
                         break;
                     case PacketType.LoginPacket:
@@ -185,25 +196,34 @@ namespace ServerProject
 
                     case PacketType.JoinRPSLobby:
 
-                        if(m_ClientForRPS.Count < 2)
-                        {
-                            m_ClientForRPS.Add(m_Clients[index]);
-                        }
+                        AddPlayersToLobby(m_ClientForRPS, m_Clients[index]);
 
                         if(m_ClientForRPS.Count == 2)
                         {
                             ConnectedClients[] playersToAdd = new ConnectedClients[2];
 
-                            playersToAdd[0] = m_ClientForRPS[0];
-                            playersToAdd[1] = m_ClientForRPS[1];
-
-                            m_RPSLobbies.TryAdd(m_NumberOfLobbies, playersToAdd);
-                            m_ClientForRPS.Clear();
+                            playersToAdd = PrepareToStartGame(m_ClientForRPS, m_RPSLobbies);
 
                             Thread RPSThread = new Thread(() => RockPaperScissors(playersToAdd[0], playersToAdd[1]));
                             RPSThread.Start();
                         }
                         
+                        break;
+
+                    case PacketType.JoinedPongLobby:
+
+                        AddPlayersToLobby(m_ClientForPong, m_Clients[index]);
+
+                        if(m_ClientForPong.Count == 2)
+                        {
+                            ConnectedClients[] playersToAdd = new ConnectedClients[2];
+
+                            playersToAdd = PrepareToStartGame(m_ClientForPong, m_PongLobbies);
+
+                            Thread PongThread = new Thread(() => Pong(playersToAdd[0], playersToAdd[1]));
+                            PongThread.Start();
+                        }
+                       
                         break;
 
                     case PacketType.RPSOption:
@@ -228,6 +248,9 @@ namespace ServerProject
 
             m_RPSLobbies = new ConcurrentDictionary<int, ConnectedClients[]>();
             m_ClientForRPS = new List<ConnectedClients>();
+
+            m_PongLobbies = new ConcurrentDictionary<int, ConnectedClients[]>();
+            m_ClientForPong = new List<ConnectedClients>();
 
             int clientIndex = 0;
 
@@ -290,9 +313,6 @@ namespace ServerProject
         {
             player1.isPlayingRPS = true;
             player2.isPlayingRPS = true;
-
-            ConnectedClients[] players = new ConnectedClients[2];
-
             
             PlayingRPSPacket playingRPS = new PlayingRPSPacket(true, m_NumberOfLobbies);
 
@@ -306,11 +326,7 @@ namespace ServerProject
 
             m_NumberOfLobbies++;
 
-            ChatMessagePacket player1Opponent = new ChatMessagePacket(player2.clientNickName + " has joined your game");
-            ChatMessagePacket player2Opponent = new ChatMessagePacket(player1.clientNickName + " has joined your game");
-
-            player1.SendTCP(player1Opponent);
-            player2.SendTCP(player2Opponent);
+            OpponentJoinedLobbyMessage(player1, player2);
 
             bool playing = true;
             
@@ -442,6 +458,53 @@ namespace ServerProject
             m_RPSLobbies.TryRemove(lobbyNumber, out lobbyPlayers);
 
             lobbyPlayers = null;
+        }
+
+        private void Pong(ConnectedClients player1, ConnectedClients player2)
+        {
+            player1.isPlayingPong = true;
+            player2.isPlayingPong = true;
+
+            PlayingPongPacket playingPong = new PlayingPongPacket(true, m_NumberOfLobbies);
+
+            player1.SendTCP(playingPong);
+            player2.SendTCP(playingPong);
+
+            int lobbyNumber = m_NumberOfLobbies;
+
+            OpponentJoinedLobbyMessage(player1, player2);
+
+            m_NumberOfLobbies++;
+        }
+
+        private void AddPlayersToLobby(List<ConnectedClients> playersInLobby, ConnectedClients client)
+        {
+            if(playersInLobby.Count < 2)
+            {
+                playersInLobby.Add(client);
+            }
+        }
+
+        private ConnectedClients[] PrepareToStartGame(List<ConnectedClients> readyPlayers , ConcurrentDictionary<int, ConnectedClients[]> gameLobbies)
+        {
+            ConnectedClients[] playersToAdd = new ConnectedClients[2];
+
+            playersToAdd[0] = readyPlayers[0];
+            playersToAdd[1] = readyPlayers[1];
+
+            gameLobbies.TryAdd(m_NumberOfLobbies, playersToAdd);
+            readyPlayers.Clear();
+
+            return playersToAdd;
+        }
+
+        private void OpponentJoinedLobbyMessage(ConnectedClients client1, ConnectedClients client2)
+        {
+            ChatMessagePacket player1Opponent = new ChatMessagePacket(client2.clientNickName + " has joined your game");
+            ChatMessagePacket player2Opponent = new ChatMessagePacket(client1.clientNickName + " has joined your game");
+
+            client1.SendTCP(player1Opponent);
+            client2.SendTCP(player2Opponent);
         }
     }
 }

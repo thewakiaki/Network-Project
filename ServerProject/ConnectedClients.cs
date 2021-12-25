@@ -38,6 +38,7 @@ namespace ServerProject
         public string clientNickName;
 
         public bool isPlayingRPS;
+        public bool isPlayingPong;
 
         public string choice;
         public int RPSScore;

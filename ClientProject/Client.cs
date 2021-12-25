@@ -32,8 +32,10 @@ namespace ClientProject
         public string nickName;
 
         public int RPSLobbyNumber;
+        public int PongLobbyNumber;
 
         public bool playingRPS;
+        public bool playingPong;
 
         public Client()
         {
@@ -150,6 +152,21 @@ namespace ClientProject
                                 m_form.UpdateChatDisplay(playRPS.message);
                                 RPSLobbyNumber = playRPS.lobbyNo;
                             }
+                            break;
+
+                        case PacketType.PlayingPong:
+
+                            PlayingPongPacket playPong = (PlayingPongPacket)dataPacket;
+
+                            if(playPong.playing)
+                            {
+                                playingPong = true;
+                                m_form.PlayingPongGame();
+                                m_form.UpdateChatDisplay(playPong.message);
+                                PongLobbyNumber = playPong.lobbyNo;
+                            }
+                                
+
                             break;
 
                         case PacketType.RPSResult:
