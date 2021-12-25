@@ -27,6 +27,8 @@ namespace Packets
         RPSGameEnd,
         JoinedPongLobby,
         PlayingPong,
+        PlayerInput,
+        PredictedMovement,
         PlayerList
     }
 
@@ -220,7 +222,6 @@ namespace Packets
         }
     }
 
-
     [Serializable]
     public class PlayerListPacket : Packet
     {
@@ -289,6 +290,36 @@ namespace Packets
             p2Score = s2;
 
             packType = PacketType.RPSNextRound;
+        }
+    }
+
+    [Serializable]
+    public class PlayerInputPacket : Packet
+    {
+        public bool moveUp;
+        public bool moveDown;
+
+        public PlayerInputPacket(bool up, bool down)
+        {
+            moveUp = up;
+            moveDown = down;
+
+            packType = PacketType.PlayerInput;
+        }
+    }
+
+    [Serializable]
+    public class PredictedMovementPacket : Packet
+    {
+        public int player1;
+        public int player2;
+
+        public PredictedMovementPacket(int p1, int p2)
+        {
+            player1 = p1;
+            player2 = p2;
+
+            packType = PacketType.PredictedMovement;
         }
     }
 

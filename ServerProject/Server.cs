@@ -226,6 +226,25 @@ namespace ServerProject
                        
                         break;
 
+                    case PacketType.PlayerInput:
+
+                        PlayerInputPacket playerMove = (PlayerInputPacket)receivedData;
+
+                        if(playerMove.moveUp && !playerMove.moveDown)
+                        {
+                            m_Clients[index].direction = ConnectedClients.PongMoveDirection.Up;
+                        }
+                        else if (!playerMove.moveUp && playerMove.moveDown)
+                        {
+                            m_Clients[index].direction = ConnectedClients.PongMoveDirection.Down;
+                        }
+                        else
+                        {
+                            m_Clients[index].direction = ConnectedClients.PongMoveDirection.None;
+                        }
+
+                        break;
+
                     case PacketType.RPSOption:
 
                         RPSOptionPacket choice = (RPSOptionPacket)receivedData;
@@ -430,28 +449,7 @@ namespace ServerProject
                 }
             }
 
-            if(player1.RPSScore == 3)
-            {
-                player1.SendTCP(new ChatMessagePacket(player1.clientNickName + " Has won"));
-                player2.SendTCP(new ChatMessagePacket(player1.clientNickName + " Has won"));
-
-                player1.SendTCP(new RPSGameEndPacket(true));
-                player2.SendTCP(new RPSGameEndPacket(true));
-
-                player1.RPSScore = 0;
-                player2.RPSScore = 0;
-            }
-            else
-            {
-                player1.SendTCP(new ChatMessagePacket(player2.clientNickName + " Has won"));
-                player2.SendTCP(new ChatMessagePacket(player2.clientNickName + " Has won"));
-
-                player1.SendTCP(new RPSGameEndPacket(true));
-                player2.SendTCP(new RPSGameEndPacket(true));
-
-                player1.RPSScore = 0;
-                player2.RPSScore = 0;
-            }
+            GameEndMessage(player1, player2, true, false);
 
             ConnectedClients[] lobbyPlayers = new ConnectedClients[2];
 
@@ -469,6 +467,48 @@ namespace ServerProject
 
             player1.SendTCP(playingPong);
             player2.SendTCP(playingPong);
+
+            bool playing = true;
+
+            while(playing)
+            {
+                if(player1.PongScore < 7 || player2.PongScore < 7)
+                {
+                    int player1Input = 0;
+                    int player2Input = 0;
+
+                    switch (player1.direction)
+                    {
+                        case ConnectedClients.PongMoveDirection.Up:
+                            player1Input = 1;
+                            break;
+                        case ConnectedClients.PongMoveDirection.Down:
+                            player1Input = -1;
+                            break;
+                        case ConnectedClients.PongMoveDirection.None:
+                            player1Input = 0;
+                            break;
+                    }
+
+                    switch (player2.direction)
+                    {
+                        case ConnectedClients.PongMoveDirection.Up:
+                            player2Input = 1;
+                            break;
+                        case ConnectedClients.PongMoveDirection.Down:
+                            player2Input = -1;
+                            break;
+                        case ConnectedClients.PongMoveDirection.None:
+                            player2Input = 0;
+                            break;
+                    }
+
+                    player1.SendTCP(new PredictedMovementPacket(player1Input, player2Input));
+                    player2.SendTCP(new PredictedMovementPacket(player1Input, player2Input));
+                }
+            }
+
+            GameEndMessage(player1, player2, false, true);
 
             int lobbyNumber = m_NumberOfLobbies;
 
@@ -505,6 +545,60 @@ namespace ServerProject
 
             client1.SendTCP(player1Opponent);
             client2.SendTCP(player2Opponent);
+        }
+
+        private void GameEndMessage(ConnectedClients p1, ConnectedClients p2, bool RPS, bool pong)
+        {
+            if(RPS)
+            {
+                if (p1.RPSScore == 3)
+                {
+                    p1.SendTCP(new ChatMessagePacket(p1.clientNickName + " Has won"));
+                    p2.SendTCP(new ChatMessagePacket(p1.clientNickName + " Has won"));
+
+                    p1.SendTCP(new RPSGameEndPacket(true));
+                    p2.SendTCP(new RPSGameEndPacket(true));
+
+                    p1.RPSScore = 0;
+                    p2.RPSScore = 0;
+                }
+                else
+                {
+                    p1.SendTCP(new ChatMessagePacket(p2.clientNickName + " Has won"));
+                    p2.SendTCP(new ChatMessagePacket(p2.clientNickName + " Has won"));
+
+                    p1.SendTCP(new RPSGameEndPacket(true));
+                    p2.SendTCP(new RPSGameEndPacket(true));
+
+                    p1.RPSScore = 0;
+                    p2.RPSScore = 0;
+                }
+            }
+            else if (pong)
+            {
+                if (p1.PongScore == 7)
+                {
+                    p1.SendTCP(new ChatMessagePacket(p1.clientNickName + " Has won"));
+                    p2.SendTCP(new ChatMessagePacket(p1.clientNickName + " Has won"));
+
+                    p1.SendTCP(new RPSGameEndPacket(true));
+                    p2.SendTCP(new RPSGameEndPacket(true));
+
+                    p1.PongScore = 0;
+                    p2.PongScore = 0;
+                }
+                else
+                {
+                    p1.SendTCP(new ChatMessagePacket(p2.clientNickName + " Has won"));
+                    p2.SendTCP(new ChatMessagePacket(p2.clientNickName + " Has won"));
+
+                    p1.SendTCP(new RPSGameEndPacket(true));
+                    p2.SendTCP(new RPSGameEndPacket(true));
+
+                    p1.PongScore = 0;
+                    p2.PongScore = 0;
+                }
+            }
         }
     }
 }

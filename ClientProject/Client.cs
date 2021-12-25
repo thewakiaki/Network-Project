@@ -9,10 +9,12 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using Packets;
+using System.Windows.Input;
+using System.Timers;
 
 namespace ClientProject
 {
-    public  class Client
+    public class Client
     {
         private UdpClient m_udpClient;
         private TcpClient m_tcpClient;
@@ -36,6 +38,9 @@ namespace ClientProject
 
         public bool playingRPS;
         public bool playingPong;
+        public bool PongMoveUp;
+        public bool PongMoveDown;
+        
 
         public Client()
         {
@@ -164,8 +169,17 @@ namespace ClientProject
                                 m_form.PlayingPongGame();
                                 m_form.UpdateChatDisplay(playPong.message);
                                 PongLobbyNumber = playPong.lobbyNo;
+                                Pong();
                             }
                                 
+
+                            break;
+
+                        case PacketType.PredictedMovement:
+
+                            PredictedMovementPacket predictedMovementPacket = (PredictedMovementPacket)dataPacket;
+
+                            m_form.MoveRackets(predictedMovementPacket.player1, predictedMovementPacket.player2);
 
                             break;
 
@@ -352,6 +366,46 @@ namespace ClientProject
             string sDecryptedMessage = Encoding.UTF8.GetString(decryptedMessage);
 
             return sDecryptedMessage;
+        }
+
+        private void Pong()
+        {
+            Thread inputThread = new Thread(() => PongInputs());
+
+            inputThread.Start();
+            
+        }
+
+        private void PongInputs()
+        {
+            while (playingPong)
+            {
+                
+                if (PongMoveUp)
+                {
+                    PlayerInputPacket upInput = new PlayerInputPacket(true, false);
+
+                    SendMessageTCP(upInput);
+
+                    Thread.Sleep(500);
+                }
+                else if (PongMoveDown)
+                {
+                    PlayerInputPacket upInput = new PlayerInputPacket(false, true);
+
+                    SendMessageTCP(upInput);
+
+                    Thread.Sleep(500);
+                }
+                else
+                {
+                    PlayerInputPacket upInput = new PlayerInputPacket(false, false);
+
+                    SendMessageTCP(upInput);
+
+                    Thread.Sleep(500);
+                }
+            }
         }
     }
 }

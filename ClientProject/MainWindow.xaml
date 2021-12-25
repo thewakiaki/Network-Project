@@ -157,7 +157,7 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Grid.Row="1" Name="Pong" Visibility="Hidden">
-                    <Canvas Width="750" Height="530" x:Name="PongCanvas">
+                    <Canvas Width="750" Height="530" x:Name="PongCanvas" PreviewKeyDown="PongCanvas_PreviewKeyDown">
                         <Rectangle Panel.ZIndex="0" Fill="Black" Width="750" Height="530" x:Name="Background"/>
                         <Rectangle Panel.ZIndex="0" Fill="DarkGray" Width="10" Height="530" Canvas.Left="370"/>
 

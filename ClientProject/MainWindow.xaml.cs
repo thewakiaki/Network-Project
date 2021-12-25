@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Threading;
 using Packets;
 
 namespace ClientProject
@@ -250,6 +251,8 @@ namespace ClientProject
                 WaitingInLobby.Visibility = Visibility.Hidden;
                 Pong.Visibility = Visibility.Visible;
             });
+
+            m_client.playingPong = true;
         }
 
         public void SetRPSNames(string player1, string player2)
@@ -399,6 +402,23 @@ namespace ClientProject
                 P2Paper.Visibility = Visibility.Hidden;
                 P2Scissors.Visibility = Visibility.Hidden;
             });
+        }
+
+        public void MoveRackets(int p1, int p2)
+        {
+            Pong.Dispatcher.Invoke(() =>
+            {
+                Canvas.SetBottom(Player1Racket, Canvas.GetBottom(Player1Racket) + p1);
+                Canvas.SetBottom(Player2Racket, Canvas.GetBottom(Player1Racket) + p2);
+            });
+        }
+
+        private void PongCanvas_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.W)
+            {
+                Console.WriteLine("MoveUP");
+            }
         }
     }
 }

@@ -42,6 +42,16 @@ namespace ServerProject
 
         public string choice;
         public int RPSScore;
+        public int PongScore;
+
+        public PongMoveDirection direction = PongMoveDirection.None;
+
+        public enum PongMoveDirection
+        {
+            Up,
+            Down,
+            None
+        }
 
 
         public ConnectedClients(Socket socket)
@@ -144,7 +154,6 @@ namespace ServerProject
 
         internal string DecryptString(byte[] message)
         {
-
             byte[] decryptedMessage = Decrypt(message);
             string sDecryptedMessage = Encoding.UTF8.GetString(decryptedMessage);
 
