@@ -44,6 +44,8 @@ namespace ServerProject
         public int RPSScore;
         public int PongScore;
 
+        public int pongPlayerNumber;
+
         public PongMoveDirection direction = PongMoveDirection.None;
 
         public enum PongMoveDirection

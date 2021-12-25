@@ -35,11 +35,15 @@ namespace ClientProject
 
         public int RPSLobbyNumber;
         public int PongLobbyNumber;
+        public int m_direction = 1;
 
         public bool playingRPS;
         public bool playingPong;
-        public bool PongMoveUp;
-        public bool PongMoveDown;
+        public bool pongMoveUp;
+        public bool pongMoveDown;
+
+        public int predictedDirectionP1 = 0;
+        public int predictedDirectionP2 = 0;
         
 
         public Client()
@@ -179,7 +183,8 @@ namespace ClientProject
 
                             PredictedMovementPacket predictedMovementPacket = (PredictedMovementPacket)dataPacket;
 
-                            m_form.MoveRackets(predictedMovementPacket.player1, predictedMovementPacket.player2);
+                            predictedDirectionP1 = predictedMovementPacket.player1;
+                            predictedDirectionP2 = predictedMovementPacket.player2;
 
                             break;
 
@@ -381,30 +386,11 @@ namespace ClientProject
             while (playingPong)
             {
                 
-                if (PongMoveUp)
-                {
-                    PlayerInputPacket upInput = new PlayerInputPacket(true, false);
+                PlayerInputPacket Input = new PlayerInputPacket(pongMoveUp, pongMoveDown);
 
-                    SendMessageTCP(upInput);
+                SendMessageTCP(Input);
 
-                    Thread.Sleep(500);
-                }
-                else if (PongMoveDown)
-                {
-                    PlayerInputPacket upInput = new PlayerInputPacket(false, true);
-
-                    SendMessageTCP(upInput);
-
-                    Thread.Sleep(500);
-                }
-                else
-                {
-                    PlayerInputPacket upInput = new PlayerInputPacket(false, false);
-
-                    SendMessageTCP(upInput);
-
-                    Thread.Sleep(500);
-                }
+                Thread.Sleep(50);
             }
         }
     }

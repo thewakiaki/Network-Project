@@ -9,7 +9,7 @@
 
     <Grid Background="#303030">
 
-        <StackPanel x:Name="Login" Width="1272" Height="689" Visibility="Visible">
+        <StackPanel x:Name="Login" Width="1272" Height="689" Visibility="Visible" KeyDown="Login_KeyDown" KeyUp="Login_KeyUp">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="445"/>
@@ -157,7 +157,7 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Grid.Row="1" Name="Pong" Visibility="Hidden">
-                    <Canvas Width="750" Height="530" x:Name="PongCanvas" PreviewKeyDown="PongCanvas_PreviewKeyDown">
+                    <Canvas Width="750" Height="530" x:Name="PongCanvas" Keyboard.KeyDown="PongCanvas_KeyDown" Keyboard.KeyUp="PongCanvas_KeyUp">
                         <Rectangle Panel.ZIndex="0" Fill="Black" Width="750" Height="530" x:Name="Background"/>
                         <Rectangle Panel.ZIndex="0" Fill="DarkGray" Width="10" Height="530" Canvas.Left="370"/>
 

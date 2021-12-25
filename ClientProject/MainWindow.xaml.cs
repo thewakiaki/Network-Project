@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Threading;
+using System.Windows.Threading;
 using Packets;
 
 namespace ClientProject
@@ -23,6 +23,8 @@ namespace ClientProject
     public partial class MainWindow : Window
     {
         Client m_client;
+
+        DispatcherTimer timer = new DispatcherTimer();
 
         public MainWindow(Client client)
         {
@@ -250,9 +252,14 @@ namespace ClientProject
             {
                 WaitingInLobby.Visibility = Visibility.Hidden;
                 Pong.Visibility = Visibility.Visible;
+                m_client.playingPong = true;
+
+                timer.Tick += MovingPlayerRackets;
+                timer.Interval = TimeSpan.FromMilliseconds(30);
+                timer.Start();
             });
 
-            m_client.playingPong = true;
+            
         }
 
         public void SetRPSNames(string player1, string player2)
@@ -408,17 +415,79 @@ namespace ClientProject
         {
             Pong.Dispatcher.Invoke(() =>
             {
-                Canvas.SetBottom(Player1Racket, Canvas.GetBottom(Player1Racket) + p1);
-                Canvas.SetBottom(Player2Racket, Canvas.GetBottom(Player1Racket) + p2);
+                if (Canvas.GetBottom(Player1Racket) > 5 && Canvas.GetBottom(Player1Racket) < 445)
+                {
+                    Canvas.SetBottom(Player1Racket, Canvas.GetBottom(Player1Racket) + p1);
+                }
+                if (Canvas.GetBottom(Player2Racket) > 5 && Canvas.GetBottom(Player2Racket) < 445)
+                {
+                    Canvas.SetBottom(Player2Racket, Canvas.GetBottom(Player1Racket) + p2);
+                }
             });
         }
 
-        private void PongCanvas_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void PongCanvas_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.W)
+            if(e.Key == Key.Up)
             {
-                Console.WriteLine("MoveUP");
+                Console.WriteLine("Moving UP");
+                m_client.pongMoveUp = true;
             }
+            else if(e.Key == Key.Down)
+            {
+                m_client.pongMoveUp = true;
+            }
+        }
+
+        private void PongCanvas_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Up)
+            {
+                m_client.pongMoveUp = false;
+            }
+            if (e.Key == Key.Down)
+            {
+                m_client.pongMoveUp = false;
+            }
+        }
+
+        private void MovingPlayerRackets(object sender, EventArgs e)
+        {
+            if(Canvas.GetBottom(Player1Racket) >= 445)
+            {
+                Canvas.SetBottom(Player1Racket, 444);
+            }
+            else if(Canvas.GetBottom(Player1Racket) <= 5)
+            {
+                Canvas.SetBottom(Player1Racket, 6);
+            }
+            else
+            {
+                Canvas.SetBottom(Player1Racket, Canvas.GetBottom(Player1Racket) + 1 * m_client.predictedDirectionP1);
+            }
+
+            if (Canvas.GetBottom(Player2Racket) >= 445)
+            {
+                Canvas.SetBottom(Player2Racket, 444);
+            }
+            else if (Canvas.GetBottom(Player2Racket) <= 5)
+            {
+                Canvas.SetBottom(Player2Racket, 6);
+            }
+            else
+            {
+                Canvas.SetBottom(Player2Racket, Canvas.GetBottom(Player2Racket) + 1 * m_client.predictedDirectionP2);
+            }
+        }
+
+        private void Login_KeyDown(object sender, KeyEventArgs e)
+        {
+            Console.WriteLine("Key down: " + e.Key);
+        }
+
+        private void Login_KeyUp(object sender, KeyEventArgs e)
+        {
+            Console.WriteLine("Key release: " + e.Key);
         }
     }
 }

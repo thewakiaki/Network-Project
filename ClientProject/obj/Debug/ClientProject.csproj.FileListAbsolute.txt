@@ -45,5 +45,4 @@ E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\bin\Debug\Imag
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\bin\Debug\Images\Paper.png
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\bin\Debug\Images\Rock.png
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\bin\Debug\Images\Scissors.png
-E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.csproj.CopyComplete
-E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.csprojAssemblyReference.cache
+E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.csproj.AssemblyReference.cache
