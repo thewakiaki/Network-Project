@@ -46,3 +46,7 @@ E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\bin\Debug\Imag
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\bin\Debug\Images\Rock.png
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\bin\Debug\Images\Scissors.png
 E:\Uni Year 2\CNA\Tutorials\Chat Tuts\CNA-Tutorials\ClientProject\obj\Debug\ClientProject.csproj.AssemblyReference.cache
+C:\Users\w025157k\CNA\CNA-Tutorials\ClientProject\bin\Debug\Images\Default Profile.png
+C:\Users\w025157k\CNA\CNA-Tutorials\ClientProject\bin\Debug\Images\Paper.png
+C:\Users\w025157k\CNA\CNA-Tutorials\ClientProject\bin\Debug\Images\Rock.png
+C:\Users\w025157k\CNA\CNA-Tutorials\ClientProject\bin\Debug\Images\Scissors.png

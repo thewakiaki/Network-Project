@@ -25,6 +25,9 @@ namespace ServerProject
         private ConcurrentDictionary<int, ConnectedClients[]> m_PongLobbies;
         private List<ConnectedClients> m_ClientForPong;
 
+        private float m_PuckDirY;
+        private float m_PuckDirX;
+
         public Server(string ipAddress, int port)
         {
             IPAddress ip = IPAddress.Parse(ipAddress);
@@ -245,6 +248,21 @@ namespace ServerProject
 
                         break;
 
+                    case PacketType.PuckCollision:
+
+                        PuckCollisionPacket collisionCheck = (PuckCollisionPacket)receivedData;
+
+                        if(collisionCheck.topOrBottom)
+                        {
+                            m_PuckDirY *= -1;
+                        }
+                        if(collisionCheck.racket)
+                        {
+                            m_PuckDirX *= -1;
+                        }
+
+                        break;
+
                     case PacketType.RPSOption:
 
                         RPSOptionPacket choice = (RPSOptionPacket)receivedData;
@@ -460,6 +478,24 @@ namespace ServerProject
 
         private void Pong(ConnectedClients player1, ConnectedClients player2)
         {
+
+            Random number = new Random();
+
+            //m_PuckDirX = number.Next(3, 7);
+            while (m_PuckDirY == 0 && m_PuckDirX == 0)
+            {
+                //m_PuckDirX = 0;
+                m_PuckDirX = 0;
+
+                while (m_PuckDirY == 0)
+                {
+                    m_PuckDirY = number.Next(-1, 1);
+                    //m_PuckDirY = ;
+                }
+            }
+            
+            
+
             player1.isPlayingPong = true;
             player2.isPlayingPong = true;
 
@@ -474,6 +510,8 @@ namespace ServerProject
             {
                 if(player1.PongScore < 7 || player2.PongScore < 7)
                 {
+                    Console.WriteLine("Puck Y Directrion: " + m_PuckDirY);
+
                     int player1Input = 0;
                     int player2Input = 0;
 
@@ -503,8 +541,15 @@ namespace ServerProject
                             break;
                     }
 
-                    player1.SendTCP(new PredictedMovementPacket(player1Input, player2Input));
-                    player2.SendTCP(new PredictedMovementPacket(player1Input, player2Input));
+                    PredictedMovementPacket nextMove = new PredictedMovementPacket(player1Input, player2Input);
+
+                    player1.SendTCP(nextMove);
+                    player2.SendTCP(nextMove);
+
+                    PuckDirectionPacket puckDirection = new PuckDirectionPacket(m_PuckDirX, m_PuckDirY);
+
+                    player1.SendTCP(puckDirection);
+                    player2.SendTCP(puckDirection);
                 }
             }
 

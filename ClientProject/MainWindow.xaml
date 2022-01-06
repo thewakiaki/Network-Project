@@ -9,7 +9,7 @@
 
     <Grid Background="#303030">
 
-        <StackPanel x:Name="Login" Width="1272" Height="689" Visibility="Visible" KeyDown="Login_KeyDown" KeyUp="Login_KeyUp">
+        <StackPanel x:Name="Login" Width="1272" Height="689" Visibility="Visible">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="445"/>
@@ -93,10 +93,10 @@
                         <Rectangle Grid.Column="1" Fill="White"/>
                         <Rectangle Grid.Column="1" Width="15" Fill="Black" HorizontalAlignment="Left"/>
 
-                        <TextBlock Grid.Column="0" Margin="10, 100, 25, 375" Text="Rock Paper Scissors" FontSize="37" TextAlignment="Center" FontWeight="ExtraBold"/>
+                        <TextBlock Grid.Column="0" Margin="10, 100, 25, 375" Text="Rock Paper Scissors" FontSize="27" TextAlignment="Center" FontWeight="ExtraBold"/>
                         <Button Grid.Column="0" Margin="50, 250, 50, 200" Content="Play" FontSize="50" Name="PlayRPS" ButtonBase.Click="PlayRPS_Click"/>
 
-                        <TextBlock Grid.Column="1" Margin="10, 100, 10, 375" Text="Pong" FontSize="37" TextAlignment="Center" FontWeight="ExtraBold"/>
+                        <TextBlock Grid.Column="1" Margin="10, 100, 10, 375" Text="Pong" FontSize="27" TextAlignment="Center" FontWeight="ExtraBold"/>
                         <Button Grid.Column="1" Margin="50, 250, 50, 200" Content="Play" FontSize="50" Name="PlayPong" ButtonBase.Click="PlayPong_Click"/>
 
 
@@ -115,7 +115,7 @@
 
                         <Rectangle Grid.Column="0" Fill="white"/>
 
-                        <TextBlock HorizontalAlignment="Center" Width="600" Height="80" Text="Waiting for Player to join" TextAlignment="Center" FontSize="50" FontWeight="ExtraBold"/>
+                        <TextBlock HorizontalAlignment="Center" Width="600" Height="80" Text="Waiting for Player to join" TextAlignment="Center" FontSize="40" FontWeight="ExtraBold"/>
 
                     </Grid>
                 </StackPanel>
@@ -157,7 +157,7 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Grid.Row="1" Name="Pong" Visibility="Hidden">
-                    <Canvas Width="750" Height="530" x:Name="PongCanvas" Keyboard.KeyDown="PongCanvas_KeyDown" Keyboard.KeyUp="PongCanvas_KeyUp">
+                    <Canvas Width="750" Height="530" x:Name="PongCanvas" Keyboard.KeyDown="PongCanvas_KeyDown" Keyboard.KeyUp="PongCanvas_KeyUp" Focusable="True">
                         <Rectangle Panel.ZIndex="0" Fill="Black" Width="750" Height="530" x:Name="Background"/>
                         <Rectangle Panel.ZIndex="0" Fill="DarkGray" Width="10" Height="530" Canvas.Left="370"/>
 

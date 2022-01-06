@@ -30,7 +30,6 @@ namespace ClientProject
         {
             InitializeComponent();
             m_client = client;
-            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -254,6 +253,7 @@ namespace ClientProject
                 Pong.Visibility = Visibility.Visible;
                 m_client.playingPong = true;
 
+                PongCanvas.Focus();
                 timer.Tick += MovingPlayerRackets;
                 timer.Interval = TimeSpan.FromMilliseconds(30);
                 timer.Start();
@@ -428,26 +428,27 @@ namespace ClientProject
 
         private void PongCanvas_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Up)
+            if(e.Key == Key.W)
             {
-                Console.WriteLine("Moving UP");
                 m_client.pongMoveUp = true;
             }
-            else if(e.Key == Key.Down)
+            else if(e.Key == Key.S)
             {
-                m_client.pongMoveUp = true;
+                m_client.pongMoveDown = true;
             }
         }
 
         private void PongCanvas_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Up)
+        { 
+            if (e.Key == Key.W)
             {
+                Console.WriteLine("Stopped Moving Up");
                 m_client.pongMoveUp = false;
             }
-            if (e.Key == Key.Down)
+            if (e.Key == Key.S)
             {
-                m_client.pongMoveUp = false;
+                Console.WriteLine("Stopped Moving Down");
+                m_client.pongMoveDown = false;
             }
         }
 
@@ -463,7 +464,7 @@ namespace ClientProject
             }
             else
             {
-                Canvas.SetBottom(Player1Racket, Canvas.GetBottom(Player1Racket) + 1 * m_client.predictedDirectionP1);
+                Canvas.SetBottom(Player1Racket, Canvas.GetBottom(Player1Racket) + 5 * m_client.predictedDirectionP1);
             }
 
             if (Canvas.GetBottom(Player2Racket) >= 445)
@@ -476,18 +477,49 @@ namespace ClientProject
             }
             else
             {
-                Canvas.SetBottom(Player2Racket, Canvas.GetBottom(Player2Racket) + 1 * m_client.predictedDirectionP2);
+                Canvas.SetBottom(Player2Racket, Canvas.GetBottom(Player2Racket) + 5 * m_client.predictedDirectionP2);
             }
         }
 
-        private void Login_KeyDown(object sender, KeyEventArgs e)
+        public void MovePuck()
         {
-            Console.WriteLine("Key down: " + e.Key);
-        }
+   
+            Pong.Dispatcher.Invoke(() =>
+            {
+                double puckPosY = Canvas.GetTop(Puck);
+                double puckPosX = Canvas.GetLeft(Puck);
 
-        private void Login_KeyUp(object sender, KeyEventArgs e)
-        {
-            Console.WriteLine("Key release: " + e.Key);
+                if (puckPosY < 2 || puckPosY > 508)
+                {
+                    PuckCollisionPacket collisionPacket = new PuckCollisionPacket(true, false);
+
+                    m_client.SendMessageTCP(collisionPacket);
+
+                    if(puckPosY < 2)
+                    {
+                        Canvas.SetTop(Puck, 5);
+                    }
+                    else
+                    {
+                        Canvas.SetTop(Puck, 505);
+                    }
+                }
+
+                if(puckPosX < 0)
+                {
+                    m_client.SendMessageTCP(new ScorePacketPong(true, 1));
+                }
+                if(puckPosX + Puck.Width > 750 )
+                {
+                    m_client.SendMessageTCP(new ScorePacketPong(true, 1));
+                }
+             
+                Canvas.SetLeft(Puck, Canvas.GetLeft(Puck) + (m_client.puckDirectionX));
+                Canvas.SetTop(Puck, Canvas.GetTop(Puck) + (m_client.puckDirectionY));
+                
+
+                
+            });
         }
     }
 }

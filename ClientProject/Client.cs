@@ -44,6 +44,9 @@ namespace ClientProject
 
         public int predictedDirectionP1 = 0;
         public int predictedDirectionP2 = 0;
+
+        public float puckDirectionX = 0;
+        public float puckDirectionY = 0;
         
 
         public Client()
@@ -186,6 +189,14 @@ namespace ClientProject
                             predictedDirectionP1 = predictedMovementPacket.player1;
                             predictedDirectionP2 = predictedMovementPacket.player2;
 
+                            break;
+
+                        case PacketType.PuckDirection:
+
+                            PuckDirectionPacket direction = (PuckDirectionPacket)dataPacket;
+
+                            puckDirectionX = direction.x;
+                            puckDirectionY = direction.y;
                             break;
 
                         case PacketType.RPSResult:
@@ -385,12 +396,12 @@ namespace ClientProject
         {
             while (playingPong)
             {
-                
+                m_form.MovePuck();
                 PlayerInputPacket Input = new PlayerInputPacket(pongMoveUp, pongMoveDown);
 
                 SendMessageTCP(Input);
 
-                Thread.Sleep(50);
+                Thread.Sleep(2);
             }
         }
     }

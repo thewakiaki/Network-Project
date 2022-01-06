@@ -29,7 +29,10 @@ namespace Packets
         JoinedPongLobby,
         PlayingPong,
         PlayerInput,
+        PuckDirection,
         PredictedMovement,
+        PuckCollision,
+        PongScore,
         PlayerList
     }
 
@@ -306,6 +309,52 @@ namespace Packets
             moveDown = down;
 
             packType = PacketType.PlayerInput;
+        }
+    }
+
+    [Serializable]
+
+    public class PuckDirectionPacket : Packet
+    {
+        public float x;
+        public float y;
+
+        public PuckDirectionPacket(float xDir, float yDir)
+        {
+            x = xDir;
+            y = yDir;
+
+            packetType = PacketType.PuckDirection;
+        }
+    }
+
+    [Serializable]
+    public class PuckCollisionPacket : Packet
+    {
+        public bool topOrBottom;
+        public bool racket;
+
+        public PuckCollisionPacket(bool tb, bool r)
+        {
+            topOrBottom = tb;
+            racket = r;
+
+            packType = PacketType.PuckCollision;
+        }
+    }
+
+    [Serializable]
+    public class ScorePacketPong : Packet
+    {
+        public bool scored;
+        public int player;
+
+        public ScorePacketPong(bool s, int p)
+        {
+            scored = s;
+            player = p;
+
+            packType = PacketType.PongScore;
         }
     }
 
