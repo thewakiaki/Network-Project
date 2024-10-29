@@ -70,6 +70,7 @@ namespace ServerProject
                         else
                         {
                             while(targetUserIndex < m_Clients.Count() && UserFound == false)
+                            {
                                 if (privateChatPacket.targetClient == m_Clients[targetUserIndex].clientUsername || privateChatPacket.targetClient == m_Clients[targetUserIndex].clientNickName)
                                 {
                                     foundUser = true;
