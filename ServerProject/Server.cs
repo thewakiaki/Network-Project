@@ -60,6 +60,7 @@ namespace ServerProject
 
                         PrivateMessagePacket privateChatPacket = (PrivateMessagePacket)receivedData;
 
+                        bool foundUser = false;
                         int targetUserIndex = 0;
 
                         if (m_Clients.Count <= 1)
@@ -68,20 +69,18 @@ namespace ServerProject
                         }
                         else
                         {
-                            for (int i = 0; i < m_Clients.Count; ++i)
-                            {
-                                if (privateChatPacket.targetClient == m_Clients[i].clientUsername || privateChatPacket.targetClient == m_Clients[i].clientNickName)
+                            while(targetUserIndex < m_Clients.Count() && UserFound == false)
+                                if (privateChatPacket.targetClient == m_Clients[targetUserIndex].clientUsername || privateChatPacket.targetClient == m_Clients[targetUserIndex].clientNickName)
                                 {
-                                    targetUserIndex = i;
+                                    foundUser = true;
                                 }
                                 else
                                 {
-                                    targetUserIndex = 0;
-                                    continue;
+                                    targetUserIndex++;
                                 }
                             }
 
-                            if (targetUserIndex == 0)
+                            if (foundUser == false)
                             {
                                 m_Clients[index].SendTCP(new ChatMessagePacket("User Does Not Exist On The Server"));
                             }
